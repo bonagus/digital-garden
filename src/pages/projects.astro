@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContentCard from '../components/content/ContentCard.astro';
+import { getPublishedProjects } from '../lib/content';
+
+const projects = await getPublishedProjects();
+---
+
+<BaseLayout title="Projects" description="Showcase project dan dokumentasi teknis.">
+  <div class="listing-wrapper">
+    <header class="listing-header">
+      <h1 class="listing-title">Projects</h1>
+      <p class="listing-description">
+        Dokumentasi project yang sudah dan sedang saya kerjakan. Tech stack, tantangan, dan hal-hal yang dipelajari.
+      </p>
+    </header>
+
+    <div class="listing-grid">
+      {projects.map((project) => (
+        <ContentCard
+          title={project.data.title}
+          description={project.data.description}
+          href={`/${project.id}`}
+          type="project"
+          startDate={project.data.startDate}
+          topics={project.data.topics}
+          growthStage={project.data.growthStage}
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .listing-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  .listing-header {
+    margin-top: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .listing-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 400;
+    color: var(--color-gray-800);
+    margin-bottom: 0.5rem;
+  }
+
+  .listing-description {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--color-gray-600);
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  .listing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0.75rem;
+  }
+</style>

@@ -1,17 +1,373 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContentCard from '../components/content/ContentCard.astro';
+import { getPublishedNotes, getPublishedEssays, getPublishedProjects, getPublishedExperiments } from '../lib/content';
 
+const notes = await getPublishedNotes();
+const essays = await getPublishedEssays();
+const projects = await getPublishedProjects();
+const experiments = await getPublishedExperiments();
+
+const recentNotes = notes.slice(0, 8);
+const recentEssays = essays.slice(0, 4);
+const recentProjects = projects.slice(0, 4);
+const recentExperiments = experiments.slice(0, 4);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Home">
+  <div class="page-wrapper">
+    <!-- Hero Header -->
+    <header class="page-header">
+      <h1 class="main-title">
+        <strong>Bonagus</strong> — tempat ide tumbuh, catatan berkembang, dan pengetahuan terhubung.
+      </h1>
+      <p class="subtitle">
+        Developer & lifelong learner. Ini adalah digital garden saya — kumpulan catatan, esai, dan eksperimen yang terus berkembang.
+      </p>
+    </header>
+
+    <!-- Garden Section Header -->
+    <section class="garden-intro">
+      <a href="/garden" class="garden-title-link">
+        <h2 class="garden-title">The Garden</h2>
+      </a>
+      <p class="garden-description">
+        Kumpulan catatan dan ide yang tidak sempurna, tumbuh perlahan seiring waktu.
+        <a href="/garden" class="readmore-link">
+          Lihat semua
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" class="arrow-icon">
+            <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638l-3.96-4.158a.75.75 0 011.08-1.04l5.25 5.5a.75.75 0 010 1.04l-5.25 5.5a.75.75 0 01-1.08-1.04l3.96-4.158H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      </p>
+    </section>
+
+    <!-- Main Grid: Essays | Notes -->
+    <section class="garden-grid">
+      <!-- Essays Section (2/3 width) -->
+      <section class="essays-section">
+        <a href="/essays" class="section-header-link">
+          <h3 class="section-header">
+            Essays
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" class="header-arrow">
+              <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638l-3.96-4.158a.75.75 0 011.08-1.04l5.25 5.5a.75.75 0 010 1.04l-5.25 5.5a.75.75 0 01-1.08-1.04l3.96-4.158H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+            </svg>
+          </h3>
+        </a>
+        <p class="section-description">Tulisan panjang, opini, dan eksplorasi mendalam.</p>
+        <div class="essays-grid">
+          {recentEssays.map((essay) => (
+            <ContentCard
+              title={essay.data.title}
+              description={essay.data.description}
+              href={`/${essay.id}`}
+              type="essay"
+              startDate={essay.data.startDate}
+              topics={essay.data.topics}
+              growthStage={essay.data.growthStage}
+            />
+          ))}
+        </div>
+      </section>
+
+      <!-- Notes Section (1/3 width) -->
+      <section class="notes-section">
+        <a href="/notes" class="section-header-link">
+          <h3 class="section-header">
+            Notes
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" class="header-arrow">
+              <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638l-3.96-4.158a.75.75 0 011.08-1.04l5.25 5.5a.75.75 0 010 1.04l-5.25 5.5a.75.75 0 01-1.08-1.04l3.96-4.158H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+            </svg>
+          </h3>
+        </a>
+        <p class="section-description">Catatan pendek tentang hal-hal yang sedang saya pelajari.</p>
+        <div class="notes-list">
+          {recentNotes.map((note) => (
+            <a href={`/${note.id}`} class="note-item">
+              <span class="note-icon">
+                {note.data.growthStage === 'seedling' && '🌱'}
+                {note.data.growthStage === 'budding' && '🌿'}
+                {note.data.growthStage === 'evergreen' && '🌳'}
+              </span>
+              <span class="note-title">{note.data.title}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Projects Section -->
+      <section class="projects-section">
+        <a href="/projects" class="section-header-link">
+          <h3 class="section-header">
+            Projects
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" class="header-arrow">
+              <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638l-3.96-4.158a.75.75 0 011.08-1.04l5.25 5.5a.75.75 0 010 1.04l-5.25 5.5a.75.75 0 01-1.08-1.04l3.96-4.158H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+            </svg>
+          </h3>
+        </a>
+        <p class="section-description">Showcase project dan dokumentasi teknis.</p>
+        <div class="projects-grid">
+          {recentProjects.map((project) => (
+            <ContentCard
+              title={project.data.title}
+              description={project.data.description}
+              href={`/${project.id}`}
+              type="project"
+              startDate={project.data.startDate}
+              topics={project.data.topics}
+              growthStage={project.data.growthStage}
+            />
+          ))}
+        </div>
+      </section>
+
+      <!-- Experiments Section -->
+      <section class="experiments-section">
+        <a href="/experiments" class="section-header-link">
+          <h3 class="section-header">
+            Experiments
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" class="header-arrow">
+              <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638l-3.96-4.158a.75.75 0 011.08-1.04l5.25 5.5a.75.75 0 010 1.04l-5.25 5.5a.75.75 0 01-1.08-1.04l3.96-4.158H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+            </svg>
+          </h3>
+        </a>
+        <p class="section-description">Eksplorasi sementara dan proof-of-concept.</p>
+        <div class="experiments-grid">
+          {recentExperiments.map((exp) => (
+            <ContentCard
+              title={exp.data.title}
+              description={exp.data.description}
+              href={`/${exp.id}`}
+              type="experiment"
+              startDate={exp.data.startDate}
+              topics={exp.data.topics}
+              growthStage={exp.data.growthStage}
+            />
+          ))}
+        </div>
+      </section>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  /* Hero */
+  .page-header {
+    margin-top: 3rem;
+  }
+
+  .main-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--color-gray-800);
+    max-width: 900px;
+    margin-bottom: 0.75rem;
+  }
+
+  .main-title strong {
+    font-weight: 700;
+  }
+
+  .subtitle {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--color-gray-600);
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  /* Garden Intro */
+  .garden-intro {
+    margin-top: 3.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .garden-title-link {
+    text-decoration: none;
+  }
+
+  .garden-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 400;
+    color: var(--color-gray-800);
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease-in-out;
+  }
+
+  .garden-title-link:hover .garden-title {
+    color: var(--color-crimson);
+  }
+
+  .garden-description {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--color-gray-800);
+    margin-bottom: 2rem;
+  }
+
+  .readmore-link {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 400;
+    color: var(--color-crimson);
+    transition: color 0.2s ease-in-out;
+    margin-left: 0.25rem;
+  }
+
+  .readmore-link:hover {
+    color: var(--color-bright-crimson);
+  }
+
+  .readmore-link .arrow-icon {
+    margin-left: 0.25rem;
+    transition: margin-left 0.3s ease-in-out;
+  }
+
+  .readmore-link:hover .arrow-icon {
+    margin-left: 0.5rem;
+    color: var(--color-sea-blue);
+  }
+
+  /* Garden Grid — mimics Maggie's layout */
+  .garden-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "essays notes"
+      "projects experiments";
+    gap: 2.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .essays-section {
+    grid-area: essays;
+  }
+
+  .notes-section {
+    grid-area: notes;
+  }
+
+  .projects-section {
+    grid-area: projects;
+  }
+
+  .experiments-section {
+    grid-area: experiments;
+  }
+
+  @media (max-width: 768px) {
+    .garden-grid {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "essays"
+        "notes"
+        "projects"
+        "experiments";
+      gap: 2rem;
+    }
+  }
+
+  /* Section Headers */
+  .section-header-link {
+    text-decoration: none;
+  }
+
+  .section-header {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-gray-800);
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    transition: color 0.3s ease-in-out;
+  }
+
+  .header-arrow {
+    margin-left: 0.25rem;
+    transition: margin-left 0.3s ease-in-out, color 0.3s ease-in-out;
+  }
+
+  .section-header-link:hover .section-header {
+    color: var(--color-bright-crimson);
+  }
+
+  .section-header-link:hover .header-arrow {
+    margin-left: 0.5rem;
+    color: var(--color-sea-blue);
+  }
+
+  .section-description {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 300;
+    color: var(--color-gray-600);
+    margin-bottom: 1rem;
+  }
+
+  /* Essays Grid */
+  .essays-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.75rem;
+  }
+
+  /* Notes List — compact */
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .note-item {
+    display: flex;
+    align-items: center;
+    padding: 0.625rem 0;
+    border-bottom: 1px solid var(--color-tinted-cream);
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .note-item:hover {
+    border-bottom-color: var(--color-sea-blue);
+    transform: scale(1.02);
+  }
+
+  .note-item:hover .note-title {
+    color: var(--color-crimson);
+  }
+
+  .note-icon {
+    flex-shrink: 0;
+    margin-right: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .note-title {
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    color: var(--color-gray-800);
+    line-height: 1.4;
+    transition: color 0.3s ease-in-out;
+  }
+
+  /* Projects/Experiments Grid */
+  .projects-grid,
+  .experiments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.75rem;
+  }
+</style>

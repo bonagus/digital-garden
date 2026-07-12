@@ -1,0 +1,109 @@
+---
+/**
+ * Backlinks — shows pages that link to the current page
+ * Reads from the pre-generated links.json
+ */
+import { getBacklinks } from '../../lib/links';
+
+interface Props {
+  contentId: string;
+}
+
+const { contentId } = Astro.props;
+const backlinks = getBacklinks(contentId);
+---
+
+{backlinks.length > 0 && (
+  <aside class="backlinks">
+    <h3 class="backlinks-title">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" class="backlinks-icon">
+        <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd" />
+      </svg>
+      Linked from
+    </h3>
+    <ul class="backlinks-list">
+      {backlinks.map((link) => (
+        <li class="backlink-item">
+          <a href={`/${link.id}`} class="backlink-link">
+            <span class="backlink-title">{link.title}</span>
+            <span class="backlink-type">{link.collection}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </aside>
+)}
+
+<style>
+  .backlinks {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-tinted-cream);
+  }
+
+  .backlinks-title {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-gray-600);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .backlinks-icon {
+    color: var(--color-sea-blue);
+  }
+
+  .backlinks-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .backlink-item {
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s ease-in-out;
+  }
+
+  .backlink-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .backlink-link:hover {
+    background: var(--color-light-cream);
+    border-color: var(--color-tinted-cream);
+  }
+
+  .backlink-link:hover .backlink-title {
+    color: var(--color-crimson);
+  }
+
+  .backlink-title {
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    color: var(--color-gray-800);
+    transition: color 0.2s ease-in-out;
+  }
+
+  .backlink-type {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    text-transform: capitalize;
+    color: var(--color-gray-500);
+    background: var(--color-cream);
+    padding: 0.125rem 0.5rem;
+    border-radius: 3rem;
+  }
+</style>

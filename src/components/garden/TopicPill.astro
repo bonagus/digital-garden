@@ -1,0 +1,57 @@
+---
+/**
+ * TopicPill — clickable topic badge that links to /topics/[topic]
+ */
+interface Props {
+  topic: string;
+  active?: boolean;
+  size?: 'sm' | 'md';
+}
+
+const { topic, active = false, size = 'sm' } = Astro.props;
+const href = `/topics/${encodeURIComponent(topic.toLowerCase())}`;
+---
+
+<a href={href} class:list={['topic-pill', { active, 'size-md': size === 'md' }]}>
+  {topic}
+</a>
+
+<style>
+  .topic-pill {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--color-gray-600);
+    background: var(--color-light-cream);
+    border: 1px solid var(--color-tinted-cream);
+    border-radius: 3rem;
+    padding: 0.2rem 0.75rem;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    white-space: nowrap;
+    display: inline-block;
+  }
+
+  .topic-pill:hover {
+    border-color: var(--color-sea-blue);
+    color: var(--color-crimson);
+    transform: translateY(-1px);
+  }
+
+  .topic-pill.active {
+    background: var(--color-crimson);
+    border-color: var(--color-crimson);
+    color: var(--color-white);
+  }
+
+  .topic-pill.active:hover {
+    background: var(--color-bright-crimson);
+    border-color: var(--color-bright-crimson);
+    color: var(--color-white);
+  }
+
+  .size-md {
+    font-size: 0.8125rem;
+    padding: 0.3rem 1rem;
+  }
+</style>

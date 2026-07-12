@@ -1,0 +1,59 @@
+---
+title: "Personal Digital Garden"
+description: "Website personal berbasis digital garden yang dibangun dengan Astro, TypeScript, Tailwind CSS, dan MDX."
+startDate: "2026-07-12"
+updated: "2026-07-12"
+topics: ["astro", "web-development", "digital-garden"]
+growthStage: "budding"
+status: "active"
+techStack: ["Astro", "TypeScript", "Tailwind CSS", "MDX"]
+repoUrl: "https://github.com/bonagus/digital-garden"
+aliases: ["Bonagus Garden", "Digital Garden Project"]
+---
+
+## Overview
+
+Project ini adalah implementasi konsep [[Membangun Digital Garden]] menggunakan stack modern:
+
+- **Astro** — static site generator (lihat [[Belajar Astro Framework]])
+- **TypeScript** — type safety
+- **Tailwind CSS** — utility-first styling (eksperimen di [[Eksperimen Tailwind CSS v4]])
+- **MDX** — markdown + komponen
+
+## Fitur
+
+### Sudah Diimplementasi
+
+- ✅ Content Collections dengan schema Zod
+- ✅ Wiki links (`[[Judul]]`) dengan resolusi otomatis
+- ✅ Backlinks di setiap halaman
+- ✅ Topic/tag system dengan halaman per topic
+- ✅ Growth stages (seedling → budding → evergreen)
+- ✅ Client-side filtering di Garden index
+- ✅ Responsive design
+- ✅ RSS feed & sitemap
+
+### Roadmap
+
+- 🔜 Knowledge graph visualization
+- 🔜 Full-text search
+- 🔜 Related content suggestions
+- 🔜 Dark mode
+
+## Arsitektur
+
+```
+src/
+├── content/          # MDX content (notes, essays, projects, experiments)
+├── components/       # Astro components
+├── layouts/          # Page layouts
+├── lib/              # Utilities & helpers
+├── plugins/          # Remark/rehype plugins
+└── styles/           # Global CSS & design tokens
+```
+
+## Pelajaran
+
+1. **Astro Content Collections** sangat powerful untuk validasi schema
+2. **Wiki links** butuh pre-build step untuk generate link map
+3. **Static output** memungkinkan hosting sangat murah

@@ -1,0 +1,188 @@
+{
+  "contentMap": {
+    "belajar astro framework": {
+      "id": "belajar-astro",
+      "title": "Belajar Astro Framework",
+      "collection": "notes",
+      "aliases": [
+        "Astro Framework",
+        "Belajar Astro"
+      ]
+    },
+    "belajar-astro": {
+      "id": "belajar-astro",
+      "title": "Belajar Astro Framework",
+      "collection": "notes",
+      "aliases": [
+        "Astro Framework",
+        "Belajar Astro"
+      ]
+    },
+    "astro framework": {
+      "id": "belajar-astro",
+      "title": "Belajar Astro Framework",
+      "collection": "notes",
+      "aliases": [
+        "Astro Framework",
+        "Belajar Astro"
+      ]
+    },
+    "belajar astro": {
+      "id": "belajar-astro",
+      "title": "Belajar Astro Framework",
+      "collection": "notes",
+      "aliases": [
+        "Astro Framework",
+        "Belajar Astro"
+      ]
+    },
+    "membangun digital garden": {
+      "id": "membangun-digital-garden",
+      "title": "Membangun Digital Garden",
+      "collection": "essays",
+      "aliases": [
+        "Digital Garden",
+        "Konsep Digital Garden"
+      ]
+    },
+    "membangun-digital-garden": {
+      "id": "membangun-digital-garden",
+      "title": "Membangun Digital Garden",
+      "collection": "essays",
+      "aliases": [
+        "Digital Garden",
+        "Konsep Digital Garden"
+      ]
+    },
+    "digital garden": {
+      "id": "membangun-digital-garden",
+      "title": "Membangun Digital Garden",
+      "collection": "essays",
+      "aliases": [
+        "Digital Garden",
+        "Konsep Digital Garden"
+      ]
+    },
+    "konsep digital garden": {
+      "id": "membangun-digital-garden",
+      "title": "Membangun Digital Garden",
+      "collection": "essays",
+      "aliases": [
+        "Digital Garden",
+        "Konsep Digital Garden"
+      ]
+    },
+    "personal digital garden": {
+      "id": "personal-digital-garden",
+      "title": "Personal Digital Garden",
+      "collection": "projects",
+      "aliases": [
+        "Bonagus Garden",
+        "Digital Garden Project"
+      ]
+    },
+    "personal-digital-garden": {
+      "id": "personal-digital-garden",
+      "title": "Personal Digital Garden",
+      "collection": "projects",
+      "aliases": [
+        "Bonagus Garden",
+        "Digital Garden Project"
+      ]
+    },
+    "bonagus garden": {
+      "id": "personal-digital-garden",
+      "title": "Personal Digital Garden",
+      "collection": "projects",
+      "aliases": [
+        "Bonagus Garden",
+        "Digital Garden Project"
+      ]
+    },
+    "digital garden project": {
+      "id": "personal-digital-garden",
+      "title": "Personal Digital Garden",
+      "collection": "projects",
+      "aliases": [
+        "Bonagus Garden",
+        "Digital Garden Project"
+      ]
+    },
+    "eksperimen tailwind css v4": {
+      "id": "tailwind-v4",
+      "title": "Eksperimen Tailwind CSS v4",
+      "collection": "experiments",
+      "aliases": [
+        "Tailwind v4",
+        "Tailwind CSS v4"
+      ]
+    },
+    "tailwind-v4": {
+      "id": "tailwind-v4",
+      "title": "Eksperimen Tailwind CSS v4",
+      "collection": "experiments",
+      "aliases": [
+        "Tailwind v4",
+        "Tailwind CSS v4"
+      ]
+    },
+    "tailwind v4": {
+      "id": "tailwind-v4",
+      "title": "Eksperimen Tailwind CSS v4",
+      "collection": "experiments",
+      "aliases": [
+        "Tailwind v4",
+        "Tailwind CSS v4"
+      ]
+    },
+    "tailwind css v4": {
+      "id": "tailwind-v4",
+      "title": "Eksperimen Tailwind CSS v4",
+      "collection": "experiments",
+      "aliases": [
+        "Tailwind v4",
+        "Tailwind CSS v4"
+      ]
+    }
+  },
+  "outboundLinks": {
+    "belajar-astro": [
+      "membangun-digital-garden",
+      "personal-digital-garden",
+      "tailwind-v4"
+    ],
+    "membangun-digital-garden": [
+      "belajar-astro",
+      "personal-digital-garden"
+    ],
+    "personal-digital-garden": [
+      "membangun-digital-garden",
+      "belajar-astro",
+      "tailwind-v4"
+    ],
+    "tailwind-v4": [
+      "personal-digital-garden",
+      "belajar-astro"
+    ]
+  },
+  "inboundLinks": {
+    "membangun-digital-garden": [
+      "belajar-astro",
+      "personal-digital-garden"
+    ],
+    "personal-digital-garden": [
+      "belajar-astro",
+      "membangun-digital-garden",
+      "tailwind-v4"
+    ],
+    "tailwind-v4": [
+      "belajar-astro",
+      "personal-digital-garden"
+    ],
+    "belajar-astro": [
+      "membangun-digital-garden",
+      "personal-digital-garden",
+      "tailwind-v4"
+    ]
+  }
+}

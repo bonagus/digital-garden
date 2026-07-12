@@ -1,0 +1,47 @@
+---
+/**
+ * TopicCloud — displays all topics as a cluster of clickable pills
+ */
+import TopicPill from './TopicPill.astro';
+import { getAllTopics } from '../../lib/content';
+
+interface Props {
+  activeTopic?: string;
+}
+
+const { activeTopic } = Astro.props;
+const topics = await getAllTopics();
+---
+
+{topics.length > 0 && (
+  <div class="topic-cloud">
+    <h3 class="topic-cloud-title">Topics</h3>
+    <div class="topic-cloud-pills">
+      {topics.map((topic) => (
+        <TopicPill topic={topic} active={topic.toLowerCase() === activeTopic?.toLowerCase()} size="md" />
+      ))}
+    </div>
+  </div>
+)}
+
+<style>
+  .topic-cloud {
+    margin-bottom: 2rem;
+  }
+
+  .topic-cloud-title {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
+
+  .topic-cloud-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+</style>

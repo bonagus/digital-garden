@@ -1,0 +1,491 @@
+---
+/**
+ * Navbar — Home, Garden (dropdown), About, Contact
+ * Adapted from Maggie Appleton's visual pattern:
+ * - Clean horizontal nav, serif logo
+ * - Garden has megamenu dropdown with descriptions
+ * - Mobile hamburger menu
+ */
+
+const currentPath = Astro.url.pathname;
+
+const gardenItems = [
+  { href: '/notes', title: 'Notes', description: 'Catatan pendek, learning notes, dan ide-ide kecil', icon: '🌱' },
+  { href: '/essays', title: 'Essays', description: 'Tulisan panjang, opini, dan eksplorasi mendalam', icon: '🌿' },
+  { href: '/projects', title: 'Projects', description: 'Showcase project dan dokumentasi teknis', icon: '🌳' },
+  { href: '/experiments', title: 'Experiments', description: 'Eksplorasi sementara dan proof-of-concept', icon: '🧪' },
+];
+---
+
+<nav class="navbar">
+  <a href="/" class="logo" aria-label="Home">
+    <span class="logo-text">bonagus</span>
+  </a>
+
+  <div class="nav-right">
+    <!-- Desktop Navigation -->
+    <div class="nav-links">
+      <a href="/" class:list={['nav-link', { active: currentPath === '/' }]}>Home</a>
+
+      <div class="popover">
+        <a href="/garden" class:list={['nav-link', { active: currentPath.startsWith('/garden') || currentPath.startsWith('/notes') || currentPath.startsWith('/essays') || currentPath.startsWith('/projects') || currentPath.startsWith('/experiments') }]}>
+          Garden
+        </a>
+        <button
+          class="popover-button"
+          aria-expanded="false"
+          aria-controls="garden-dropdown"
+          aria-label="Toggle Garden menu"
+        >
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" class="chevron-icon">
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+          </svg>
+        </button>
+
+        <div class="megamenu hidden" id="garden-dropdown" role="list">
+          <div class="megamenu-grid">
+            {gardenItems.map((item) => (
+              <a href={item.href} role="listitem" class="megamenu-item">
+                <div class="megamenu-item-content">
+                  <span class="megamenu-icon">{item.icon}</span>
+                  <div class="megamenu-text">
+                    <h3 class="megamenu-title">{item.title}</h3>
+                    <p class="megamenu-description">{item.description}</p>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <a href="/about" class:list={['nav-link', { active: currentPath === '/about' }]}>About</a>
+      <a href="/contact" class:list={['nav-link', { active: currentPath === '/contact' }]}>Contact</a>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle mobile menu">
+      <svg class="menu-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 12h18M3 6h18M3 18h18" />
+      </svg>
+      <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="mobile-menu">
+  <nav class="mobile-nav">
+    <a href="/" class="mobile-nav-link">Home</a>
+    <a href="/garden" class="mobile-nav-link">Garden</a>
+    <a href="/notes" class="mobile-nav-link sub">Notes</a>
+    <a href="/essays" class="mobile-nav-link sub">Essays</a>
+    <a href="/projects" class="mobile-nav-link sub">Projects</a>
+    <a href="/experiments" class="mobile-nav-link sub">Experiments</a>
+    <a href="/about" class="mobile-nav-link">About</a>
+    <a href="/contact" class="mobile-nav-link">Contact</a>
+  </nav>
+</div>
+
+<style>
+  .navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: var(--color-cream);
+    position: relative;
+    z-index: 1001;
+    animation: fadeIn 0.5s 0.2s forwards;
+    opacity: 0;
+  }
+
+  .logo {
+    text-decoration: none;
+  }
+
+  .logo-text {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-gray-800);
+    transition: color 0.2s ease-in-out;
+  }
+
+  .logo:hover .logo-text {
+    color: var(--color-crimson);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .nav-link {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--color-gray-800);
+    text-decoration: none;
+    padding: 0.25rem 0;
+    margin-left: 1.5rem;
+    position: relative;
+    transition: color 0.2s ease-in-out;
+    white-space: nowrap;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background: var(--color-sea-blue);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s cubic-bezier(0.2, 1, 0.8, 1);
+  }
+
+  .nav-link:hover {
+    color: var(--color-crimson);
+  }
+
+  .nav-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  .nav-link.active {
+    color: var(--color-crimson);
+  }
+
+  .nav-link.active::after {
+    transform: scaleX(1);
+    background: var(--color-crimson);
+  }
+
+  /* Popover / Dropdown */
+  .popover {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .popover-button {
+    background: transparent;
+    border: none;
+    padding: 0.125rem 0.25rem;
+    margin-left: 0.125rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--color-gray-600);
+    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+  }
+
+  .popover-button:hover {
+    background-color: var(--color-gray-100);
+    color: var(--color-bright-crimson);
+  }
+
+  .chevron-icon {
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .popover-button[aria-expanded="true"] .chevron-icon {
+    transform: rotate(180deg);
+  }
+
+  /* Megamenu */
+  .megamenu {
+    display: flex;
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    right: -100%;
+    min-width: 480px;
+    background: var(--color-cream);
+    border: 1px solid var(--color-tinted-cream);
+    border-radius: var(--radius-base);
+    box-shadow: var(--shadow-md);
+    z-index: 100;
+    padding: 0.5rem;
+    transform-origin: top;
+    opacity: 0;
+    transform: rotateX(-15deg);
+    scale: 0.95;
+    transition:
+      opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      scale 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .megamenu.hidden {
+    display: none;
+  }
+
+  .megamenu.open {
+    opacity: 1;
+    transform: rotateX(0deg);
+    scale: 1;
+  }
+
+  .megamenu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    width: 100%;
+  }
+
+  .megamenu-item {
+    text-decoration: none;
+    padding: 0.75rem;
+    border-radius: var(--radius-base);
+    transition: all 0.3s ease-in-out;
+    border: 1px solid transparent;
+    display: block;
+  }
+
+  .megamenu-item:hover {
+    background: var(--color-light-cream);
+    border-color: var(--color-tinted-cream);
+    transform: translateY(-1px);
+  }
+
+  .megamenu-item-content {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .megamenu-icon {
+    flex-shrink: 0;
+    font-size: 1.25rem;
+    margin-top: 2px;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .megamenu-item:hover .megamenu-icon {
+    transform: scale(1.15);
+  }
+
+  .megamenu-text {
+    flex: 1;
+  }
+
+  .megamenu-title {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-gray-800);
+    margin: 0 0 0.25rem 0;
+    transition: color 0.3s ease-in-out;
+  }
+
+  .megamenu-item:hover .megamenu-title {
+    color: var(--color-crimson);
+  }
+
+  .megamenu-description {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--color-gray-600);
+    margin: 0;
+    line-height: 1.4;
+    transition: color 0.3s ease-in-out;
+  }
+
+  .megamenu-item:hover .megamenu-description {
+    color: var(--color-gray-800);
+  }
+
+  /* Mobile Menu Toggle */
+  .mobile-menu-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 0.75rem;
+    cursor: pointer;
+    color: var(--color-gray-800);
+  }
+
+  .mobile-menu-toggle svg {
+    position: absolute;
+    transition: opacity 160ms ease, transform 160ms ease;
+  }
+
+  .mobile-menu-toggle .close-icon {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.9);
+  }
+
+  .mobile-menu-toggle.open .menu-icon {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.9);
+  }
+
+  .mobile-menu-toggle.open .close-icon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+
+  /* Mobile Menu Panel */
+  .mobile-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    min-height: 100dvh;
+    background: var(--color-cream);
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 240ms cubic-bezier(0.215, 0.61, 0.355, 1);
+    padding: 5rem 1.5rem 2rem;
+  }
+
+  .mobile-menu.open {
+    transform: translateX(0);
+  }
+
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .mobile-nav-link {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    color: var(--color-gray-800);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: color 0.2s ease-in-out;
+  }
+
+  .mobile-nav-link:hover {
+    color: var(--color-crimson);
+  }
+
+  .mobile-nav-link.sub {
+    padding-left: 1.5rem;
+    font-size: 1rem;
+    color: var(--color-gray-600);
+  }
+
+  .mobile-nav-link.sub:hover {
+    color: var(--color-crimson);
+  }
+
+  /* Responsive */
+  @media screen and (max-width: 640px) {
+    .nav-links {
+      display: none;
+    }
+
+    .mobile-menu-toggle {
+      display: flex;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .megamenu {
+      min-width: 360px;
+      right: -60px;
+    }
+
+    .megamenu-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-menu-toggle svg,
+    .mobile-menu {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  function initNavbar() {
+    // Mobile menu
+    const menuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (menuToggle && mobileMenu) {
+      const newToggle = menuToggle.cloneNode(true) as HTMLButtonElement;
+      menuToggle.parentNode?.replaceChild(newToggle, menuToggle);
+
+      newToggle.addEventListener('click', () => {
+        newToggle.classList.toggle('open');
+        mobileMenu.classList.toggle('open');
+        document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : 'auto';
+      });
+    }
+
+    // Garden dropdown
+    const popoverBtn = document.querySelector('.popover-button') as HTMLButtonElement;
+    const megamenu = document.getElementById('garden-dropdown') as HTMLElement;
+
+    if (popoverBtn && megamenu) {
+      function closeMegamenu() {
+        popoverBtn.setAttribute('aria-expanded', 'false');
+        megamenu.classList.remove('open');
+        setTimeout(() => {
+          if (!megamenu.classList.contains('open')) {
+            megamenu.classList.add('hidden');
+          }
+        }, 250);
+      }
+
+      function openMegamenu() {
+        popoverBtn.setAttribute('aria-expanded', 'true');
+        megamenu.classList.remove('hidden');
+        megamenu.offsetHeight; // force reflow
+        requestAnimationFrame(() => {
+          megamenu.classList.add('open');
+        });
+      }
+
+      popoverBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (megamenu.classList.contains('hidden') || !megamenu.classList.contains('open')) {
+          openMegamenu();
+        } else {
+          closeMegamenu();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && megamenu.classList.contains('open')) {
+          closeMegamenu();
+          popoverBtn.focus();
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!megamenu.contains(e.target as Node) && !popoverBtn.contains(e.target as Node)) {
+          closeMegamenu();
+        }
+      });
+    }
+  }
+
+  initNavbar();
+  document.addEventListener('astro:page-load', initNavbar);
+</script>

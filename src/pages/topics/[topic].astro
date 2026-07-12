@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TopicCloud from '../../components/garden/TopicCloud.astro';
+import ContentCard from '../../components/content/ContentCard.astro';
+import { getAllTopics, getContentByTopic } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const topics = await getAllTopics();
+  return topics.map((topic) => ({
+    params: { topic: topic.toLowerCase() },
+    props: { topic },
+  }));
+}
+
+const { topic } = Astro.props;
+const content = await getContentByTopic(topic);
+---
+
+<BaseLayout title={`Topic: ${topic}`} description={`Semua konten bertopik "${topic}".`}>
+  <div class="topic-wrapper">
+    <header class="topic-header">
+      <a href="/garden" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l3.96 4.158a.75.75 0 01-1.08 1.04l-5.25-5.5a.75.75 0 010-1.04l5.25-5.5a.75.75 0 011.08 1.04L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd" />
+        </svg>
+        Back to Garden
+      </a>
+      <h1 class="topic-title">{topic}</h1>
+      <p class="topic-count">{content.length} {content.length === 1 ? 'item' : 'items'}</p>
+    </header>
+
+    <div class="topic-content-grid">
+      {content.map((item) => (
+        <ContentCard
+          title={item.data.title}
+          description={item.data.description}
+          href={`/${item.id}`}
+          type={item.collection}
+          startDate={item.data.startDate}
+          topics={item.data.topics}
+          growthStage={item.data.growthStage}
+        />
+      ))}
+    </div>
+
+    <section class="related-topics">
+      <TopicCloud activeTopic={topic} />
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .topic-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  .topic-header {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--color-gray-500);
+    text-decoration: none;
+    margin-bottom: 1rem;
+    transition: color 0.2s ease-in-out;
+  }
+
+  .back-link:hover {
+    color: var(--color-crimson);
+  }
+
+  .topic-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 400;
+    color: var(--color-gray-800);
+    margin-bottom: 0.25rem;
+  }
+
+  .topic-count {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--color-gray-500);
+  }
+
+  .topic-content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 3rem;
+  }
+
+  .related-topics {
+    border-top: 1px solid var(--color-tinted-cream);
+    padding-top: 2rem;
+  }
+</style>

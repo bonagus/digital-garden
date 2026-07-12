@@ -1,0 +1,41 @@
+---
+/**
+ * ContentGrid — renders a grid of ContentCards with data-type for filtering
+ */
+import ContentCard from '../content/ContentCard.astro';
+import type { AnyContentEntry } from '../../lib/content';
+
+interface Props {
+  items: AnyContentEntry[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="content-grid" id="content-grid">
+  {items.map((item) => (
+    <div class="content-grid-item" data-type={item.collection}>
+      <ContentCard
+        title={item.data.title}
+        description={item.data.description}
+        href={`/${item.id}`}
+        type={item.collection}
+        startDate={item.data.startDate}
+        topics={item.data.topics}
+        growthStage={item.data.growthStage}
+      />
+    </div>
+  ))}
+</div>
+
+<style>
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .content-grid-item {
+    display: block;
+  }
+</style>

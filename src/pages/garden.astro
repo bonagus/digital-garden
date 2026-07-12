@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TopicCloud from '../components/garden/TopicCloud.astro';
+import GardenFilters from '../components/garden/GardenFilters.astro';
+import ContentGrid from '../components/garden/ContentGrid.astro';
+import { getAllPublishedContent } from '../lib/content';
+
+const allContent = await getAllPublishedContent();
+const totalNotes = allContent.filter((c) => c.collection === 'notes').length;
+const totalEssays = allContent.filter((c) => c.collection === 'essays').length;
+const totalProjects = allContent.filter((c) => c.collection === 'projects').length;
+const totalExperiments = allContent.filter((c) => c.collection === 'experiments').length;
+---
+
+<BaseLayout title="Garden" description="Semua konten dalam satu taman pengetahuan.">
+  <div class="garden-wrapper">
+    <header class="garden-header">
+      <h1 class="garden-title">The Garden</h1>
+      <p class="garden-description">
+        Kumpulan seluruh catatan, esai, project, dan eksperimen. Sebuah digital garden — tempat ide tumbuh organik tanpa harus sempurna.
+      </p>
+      <div class="garden-stats">
+        <span class="stat">{allContent.length} total</span>
+        <span class="stat-dot">·</span>
+        <span class="stat">{totalNotes} notes</span>
+        <span class="stat-dot">·</span>
+        <span class="stat">{totalEssays} essays</span>
+        <span class="stat-dot">·</span>
+        <span class="stat">{totalProjects} projects</span>
+        <span class="stat-dot">·</span>
+        <span class="stat">{totalExperiments} experiments</span>
+      </div>
+    </header>
+
+    <TopicCloud />
+    <GardenFilters />
+    <ContentGrid items={allContent} />
+  </div>
+</BaseLayout>
+
+<style>
+  .garden-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  .garden-header {
+    margin-top: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .garden-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 400;
+    color: var(--color-gray-800);
+    margin-bottom: 0.5rem;
+  }
+
+  .garden-description {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--color-gray-600);
+    max-width: 600px;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+
+  .garden-stats {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--color-gray-500);
+  }
+
+  .stat-dot {
+    color: var(--color-gray-400);
+  }
+</style>

@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContentCard from '../components/content/ContentCard.astro';
+import { getPublishedExperiments } from '../lib/content';
+
+const experiments = await getPublishedExperiments();
+---
+
+<BaseLayout title="Experiments" description="Eksplorasi sementara dan proof-of-concept.">
+  <div class="listing-wrapper">
+    <header class="listing-header">
+      <h1 class="listing-title">Experiments</h1>
+      <p class="listing-description">
+        Proof-of-concept, eksplorasi teknis, dan hal-hal yang sedang saya coba. Mungkin berhasil, mungkin tidak.
+      </p>
+    </header>
+
+    <div class="listing-grid">
+      {experiments.map((exp) => (
+        <ContentCard
+          title={exp.data.title}
+          description={exp.data.description}
+          href={`/${exp.id}`}
+          type="experiment"
+          startDate={exp.data.startDate}
+          topics={exp.data.topics}
+          growthStage={exp.data.growthStage}
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .listing-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  .listing-header {
+    margin-top: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .listing-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 400;
+    color: var(--color-gray-800);
+    margin-bottom: 0.5rem;
+  }
+
+  .listing-description {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--color-gray-600);
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  .listing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0.75rem;
+  }
+</style>

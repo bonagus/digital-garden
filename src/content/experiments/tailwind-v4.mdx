@@ -1,0 +1,51 @@
+---
+title: "Eksperimen Tailwind CSS v4"
+description: "Mencoba fitur baru Tailwind CSS v4 — CSS-first configuration, @theme directive, dan perubahan dari v3."
+startDate: "2026-07-12"
+updated: "2026-07-12"
+topics: ["tailwind", "css", "web-development"]
+growthStage: "seedling"
+status: "exploring"
+aliases: ["Tailwind v4", "Tailwind CSS v4"]
+---
+
+## Apa yang Baru di v4?
+
+Tailwind CSS v4 memperkenalkan perubahan fundamental:
+
+1. **CSS-first config** — tidak perlu `tailwind.config.js` lagi
+2. **`@theme` directive** — define design tokens langsung di CSS
+3. **Lightning CSS** — build engine baru, jauh lebih cepat
+4. **Native CSS nesting** — mendukung nesting tanpa plugin
+
+## Setup di Astro
+
+Dalam project [[Personal Digital Garden]], saya menggunakan Tailwind v4 dengan:
+
+```css
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #f6f5f1;
+  --font-serif: 'Libre Baskerville', serif;
+}
+```
+
+Tidak perlu `tailwind.config.mjs` — semuanya di CSS!
+
+## Perbandingan dengan v3
+
+| Aspek | v3 | v4 |
+|-------|----|----|
+| Config | `tailwind.config.js` | `@theme` di CSS |
+| Build | PostCSS | Lightning CSS |
+| Nesting | Plugin | Native |
+| Speed | Cepat | Lebih cepat |
+
+## Integrasi dengan Astro
+
+Catatan tentang [[Belajar Astro Framework]] menjelaskan bagaimana Astro + Tailwind v4 bekerja bersama. Key insight: gunakan `@tailwindcss/vite` plugin, bukan `@astrojs/tailwind` yang lama.
+
+## Kesimpulan Sementara
+
+Tailwind v4 terasa lebih "CSS-native". Cocok untuk proyek yang ingin lebih dekat dengan platform web tanpa abstraksi berlebihan.
