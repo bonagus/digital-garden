@@ -38,14 +38,14 @@ const backlinks = getBacklinks(contentId);
   .backlinks {
     margin-top: 3rem;
     padding-top: 1.5rem;
-    border-top: 1px solid var(--color-tinted-cream);
+    border-top: 1px solid var(--border-color);
   }
 
   .backlinks-title {
     font-family: var(--font-sans);
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--color-gray-600);
+    color: var(--text-muted);
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -53,7 +53,7 @@ const backlinks = getBacklinks(contentId);
   }
 
   .backlinks-icon {
-    color: var(--color-sea-blue);
+    color: var(--accent);
   }
 
   .backlinks-list {
@@ -82,18 +82,18 @@ const backlinks = getBacklinks(contentId);
   }
 
   .backlink-link:hover {
-    background: var(--color-light-cream);
-    border-color: var(--color-tinted-cream);
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
   }
 
   .backlink-link:hover .backlink-title {
-    color: var(--color-crimson);
+    color: var(--accent);
   }
 
   .backlink-title {
     font-family: var(--font-serif);
     font-size: 0.9375rem;
-    color: var(--color-gray-800);
+    color: var(--text-heading);
     transition: color 0.2s ease-in-out;
   }
 
@@ -101,8 +101,8 @@ const backlinks = getBacklinks(contentId);
     font-family: var(--font-sans);
     font-size: 0.6875rem;
     text-transform: capitalize;
-    color: var(--color-gray-500);
-    background: var(--color-cream);
+    color: var(--text-muted);
+    background: var(--bg-primary);
     padding: 0.125rem 0.5rem;
     border-radius: 3rem;
   }

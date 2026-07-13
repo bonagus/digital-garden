@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SearchBar from '../components/garden/SearchBar.astro';
 import TopicCloud from '../components/garden/TopicCloud.astro';
 import GardenFilters from '../components/garden/GardenFilters.astro';
 import ContentGrid from '../components/garden/ContentGrid.astro';
@@ -32,6 +33,7 @@ const totalExperiments = allContent.filter((c) => c.collection === 'experiments'
       </div>
     </header>
 
+    <SearchBar />
     <TopicCloud />
     <GardenFilters />
     <ContentGrid items={allContent} />
@@ -40,9 +42,9 @@ const totalExperiments = allContent.filter((c) => c.collection === 'experiments'
 
 <style>
   .garden-wrapper {
-    max-width: 1400px;
+    max-width: var(--width-wide);
     margin: 0 auto;
-    padding: 0 1.5rem 4rem;
+    padding: 0 2rem 4rem;
   }
 
   .garden-header {
@@ -53,16 +55,16 @@ const totalExperiments = allContent.filter((c) => c.collection === 'experiments'
   .garden-title {
     font-family: var(--font-serif);
     font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 400;
-    color: var(--color-gray-800);
+    font-weight: 700;
+    color: var(--text-heading);
     margin-bottom: 0.5rem;
   }
 
   .garden-description {
     font-family: var(--font-sans);
     font-size: 1rem;
-    font-weight: 300;
-    color: var(--color-gray-600);
+    font-weight: 400;
+    color: var(--text-body);
     max-width: 600px;
     line-height: 1.6;
     margin-bottom: 0.75rem;
@@ -75,10 +77,10 @@ const totalExperiments = allContent.filter((c) => c.collection === 'experiments'
     gap: 0.25rem;
     font-family: var(--font-sans);
     font-size: 0.8125rem;
-    color: var(--color-gray-500);
+    color: var(--text-muted);
   }
 
   .stat-dot {
-    color: var(--color-gray-400);
+    color: var(--text-faint);
   }
 </style>

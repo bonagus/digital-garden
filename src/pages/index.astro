@@ -152,9 +152,9 @@ const recentExperiments = experiments.slice(0, 4);
 
 <style>
   .page-wrapper {
-    max-width: 1400px;
+    max-width: var(--width-wide);
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 2rem;
   }
 
   /* Hero */
@@ -165,22 +165,23 @@ const recentExperiments = experiments.slice(0, 4);
   .main-title {
     font-family: var(--font-serif);
     font-size: clamp(1.75rem, 4vw, 2.5rem);
-    font-weight: 400;
+    font-weight: 700;
     line-height: 1.3;
-    color: var(--color-gray-800);
+    color: var(--text-heading);
     max-width: 900px;
     margin-bottom: 0.75rem;
   }
 
   .main-title strong {
     font-weight: 700;
+    color: var(--accent);
   }
 
   .subtitle {
     font-family: var(--font-sans);
-    font-size: 1rem;
-    font-weight: 300;
-    color: var(--color-gray-600);
+    font-size: 1.0625rem;
+    font-weight: 400;
+    color: var(--text-body);
     max-width: 600px;
     line-height: 1.6;
   }
@@ -198,35 +199,35 @@ const recentExperiments = experiments.slice(0, 4);
   .garden-title {
     font-family: var(--font-serif);
     font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 400;
-    color: var(--color-gray-800);
+    font-weight: 700;
+    color: var(--text-heading);
     margin-bottom: 0.5rem;
     transition: color 0.3s ease-in-out;
   }
 
   .garden-title-link:hover .garden-title {
-    color: var(--color-crimson);
+    color: var(--accent);
   }
 
   .garden-description {
     font-family: var(--font-sans);
     font-size: 1rem;
-    font-weight: 300;
-    color: var(--color-gray-800);
+    font-weight: 400;
+    color: var(--text-body);
     margin-bottom: 2rem;
   }
 
   .readmore-link {
     display: inline-flex;
     align-items: center;
-    font-weight: 400;
-    color: var(--color-crimson);
+    font-weight: 500;
+    color: var(--accent);
     transition: color 0.2s ease-in-out;
     margin-left: 0.25rem;
   }
 
   .readmore-link:hover {
-    color: var(--color-bright-crimson);
+    color: var(--accent-hover);
   }
 
   .readmore-link .arrow-icon {
@@ -236,10 +237,9 @@ const recentExperiments = experiments.slice(0, 4);
 
   .readmore-link:hover .arrow-icon {
     margin-left: 0.5rem;
-    color: var(--color-sea-blue);
   }
 
-  /* Garden Grid — mimics Maggie's layout */
+  /* Garden Grid */
   .garden-grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -287,8 +287,8 @@ const recentExperiments = experiments.slice(0, 4);
   .section-header {
     font-family: var(--font-sans);
     font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-gray-800);
+    font-weight: 700;
+    color: var(--text-heading);
     display: flex;
     align-items: center;
     margin-bottom: 0.25rem;
@@ -301,19 +301,19 @@ const recentExperiments = experiments.slice(0, 4);
   }
 
   .section-header-link:hover .section-header {
-    color: var(--color-bright-crimson);
+    color: var(--accent);
   }
 
   .section-header-link:hover .header-arrow {
     margin-left: 0.5rem;
-    color: var(--color-sea-blue);
+    color: var(--accent);
   }
 
   .section-description {
     font-family: var(--font-sans);
     font-size: 0.875rem;
-    font-weight: 300;
-    color: var(--color-gray-600);
+    font-weight: 400;
+    color: var(--text-body);
     margin-bottom: 1rem;
   }
 
@@ -334,18 +334,18 @@ const recentExperiments = experiments.slice(0, 4);
     display: flex;
     align-items: center;
     padding: 0.625rem 0;
-    border-bottom: 1px solid var(--color-tinted-cream);
+    border-bottom: 1px solid var(--border-color);
     text-decoration: none;
     transition: all 0.3s ease-in-out;
   }
 
   .note-item:hover {
-    border-bottom-color: var(--color-sea-blue);
+    border-bottom-color: var(--accent);
     transform: scale(1.02);
   }
 
   .note-item:hover .note-title {
-    color: var(--color-crimson);
+    color: var(--accent);
   }
 
   .note-icon {
@@ -358,7 +358,7 @@ const recentExperiments = experiments.slice(0, 4);
     font-family: var(--font-serif);
     font-size: 0.9375rem;
     font-weight: 400;
-    color: var(--color-gray-800);
+    color: var(--text-heading);
     line-height: 1.4;
     transition: color 0.3s ease-in-out;
   }

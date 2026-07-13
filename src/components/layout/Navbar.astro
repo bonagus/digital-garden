@@ -1,10 +1,6 @@
 ---
 /**
- * Navbar — Home, Garden (dropdown), About, Contact
- * Adapted from Maggie Appleton's visual pattern:
- * - Clean horizontal nav, serif logo
- * - Garden has megamenu dropdown with descriptions
- * - Mobile hamburger menu
+ * Navbar — Home, Garden (dropdown), About, Contact + Dark Mode Toggle
  */
 
 const currentPath = Astro.url.pathname;
@@ -63,6 +59,24 @@ const gardenItems = [
       <a href="/contact" class:list={['nav-link', { active: currentPath === '/contact' }]}>Contact</a>
     </div>
 
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+      <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+
     <!-- Mobile Menu Toggle -->
     <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle mobile menu">
       <svg class="menu-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -95,8 +109,10 @@ const gardenItems = [
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 1.5rem;
-    background: var(--color-cream);
+    max-width: var(--width-wide);
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    background: var(--bg-primary);
     position: relative;
     z-index: 1001;
     animation: fadeIn 0.5s 0.2s forwards;
@@ -111,17 +127,18 @@ const gardenItems = [
     font-family: var(--font-serif);
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--color-gray-800);
+    color: var(--text-heading);
     transition: color 0.2s ease-in-out;
   }
 
   .logo:hover .logo-text {
-    color: var(--color-crimson);
+    color: var(--accent);
   }
 
   .nav-right {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
   }
 
   .nav-links {
@@ -133,7 +150,8 @@ const gardenItems = [
   .nav-link {
     font-family: var(--font-sans);
     font-size: 0.875rem;
-    color: var(--color-gray-800);
+    font-weight: 600;
+    color: var(--text-body);
     text-decoration: none;
     padding: 0.25rem 0;
     margin-left: 1.5rem;
@@ -149,14 +167,14 @@ const gardenItems = [
     height: 1px;
     bottom: 0;
     left: 0;
-    background: var(--color-sea-blue);
+    background: var(--accent);
     transform: scaleX(0);
     transform-origin: center;
     transition: transform 0.3s cubic-bezier(0.2, 1, 0.8, 1);
   }
 
   .nav-link:hover {
-    color: var(--color-crimson);
+    color: var(--accent);
   }
 
   .nav-link:hover::after {
@@ -164,12 +182,51 @@ const gardenItems = [
   }
 
   .nav-link.active {
-    color: var(--color-crimson);
+    color: var(--accent);
   }
 
   .nav-link.active::after {
     transform: scaleX(1);
-    background: var(--color-crimson);
+    background: var(--accent);
+  }
+
+  /* Theme Toggle */
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    cursor: pointer;
+    color: var(--text-body);
+    transition: all 0.2s ease-in-out;
+    margin-left: 0.75rem;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--bg-surface);
+  }
+
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .theme-toggle .moon-icon {
+    display: none;
+  }
+
+  :global([data-theme="dark"]) .theme-toggle .sun-icon {
+    display: none;
+  }
+
+  :global([data-theme="dark"]) .theme-toggle .moon-icon {
+    display: block;
   }
 
   /* Popover / Dropdown */
@@ -186,15 +243,15 @@ const gardenItems = [
     margin-left: 0.125rem;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    color: var(--color-gray-600);
+    color: var(--text-muted);
     transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
     display: flex;
     align-items: center;
   }
 
   .popover-button:hover {
-    background-color: var(--color-gray-100);
-    color: var(--color-bright-crimson);
+    background-color: var(--bg-surface);
+    color: var(--accent);
   }
 
   .chevron-icon {
@@ -212,8 +269,8 @@ const gardenItems = [
     top: calc(100% + 0.6rem);
     right: -100%;
     min-width: 480px;
-    background: var(--color-cream);
-    border: 1px solid var(--color-tinted-cream);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-base);
     box-shadow: var(--shadow-md);
     z-index: 100;
@@ -255,8 +312,8 @@ const gardenItems = [
   }
 
   .megamenu-item:hover {
-    background: var(--color-light-cream);
-    border-color: var(--color-tinted-cream);
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
     transform: translateY(-1px);
   }
 
@@ -286,26 +343,26 @@ const gardenItems = [
     font-family: var(--font-sans);
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--color-gray-800);
+    color: var(--text-heading);
     margin: 0 0 0.25rem 0;
     transition: color 0.3s ease-in-out;
   }
 
   .megamenu-item:hover .megamenu-title {
-    color: var(--color-crimson);
+    color: var(--accent);
   }
 
   .megamenu-description {
     font-family: var(--font-sans);
     font-size: 0.75rem;
-    color: var(--color-gray-600);
+    color: var(--text-muted);
     margin: 0;
     line-height: 1.4;
     transition: color 0.3s ease-in-out;
   }
 
   .megamenu-item:hover .megamenu-description {
-    color: var(--color-gray-800);
+    color: var(--text-body);
   }
 
   /* Mobile Menu Toggle */
@@ -319,9 +376,8 @@ const gardenItems = [
     background: none;
     border: none;
     padding: 0;
-    margin-left: 0.75rem;
     cursor: pointer;
-    color: var(--color-gray-800);
+    color: var(--text-heading);
   }
 
   .mobile-menu-toggle svg {
@@ -351,7 +407,7 @@ const gardenItems = [
     right: 0;
     width: 100%;
     min-height: 100dvh;
-    background: var(--color-cream);
+    background: var(--bg-primary);
     z-index: 1000;
     transform: translateX(100%);
     transition: transform 240ms cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -371,24 +427,24 @@ const gardenItems = [
   .mobile-nav-link {
     font-family: var(--font-sans);
     font-size: 1.125rem;
-    color: var(--color-gray-800);
+    color: var(--text-heading);
     text-decoration: none;
     padding: 0.5rem 0;
     transition: color 0.2s ease-in-out;
   }
 
   .mobile-nav-link:hover {
-    color: var(--color-crimson);
+    color: var(--accent);
   }
 
   .mobile-nav-link.sub {
     padding-left: 1.5rem;
     font-size: 1rem;
-    color: var(--color-gray-600);
+    color: var(--text-body);
   }
 
   .mobile-nav-link.sub:hover {
-    color: var(--color-crimson);
+    color: var(--accent);
   }
 
   /* Responsive */
@@ -481,6 +537,25 @@ const gardenItems = [
       document.addEventListener('click', (e) => {
         if (!megamenu.contains(e.target as Node) && !popoverBtn.contains(e.target as Node)) {
           closeMegamenu();
+        }
+      });
+    }
+
+    // Theme toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+      const newBtn = themeToggle.cloneNode(true) as HTMLButtonElement;
+      themeToggle.parentNode?.replaceChild(newBtn, themeToggle);
+
+      newBtn.addEventListener('click', () => {
+        const html = document.documentElement;
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          html.removeAttribute('data-theme');
+          localStorage.setItem('theme', 'light');
+        } else {
+          html.setAttribute('data-theme', 'dark');
+          localStorage.setItem('theme', 'dark');
         }
       });
     }

@@ -21,9 +21,9 @@ const href = `/topics/${encodeURIComponent(topic.toLowerCase())}`;
     font-family: var(--font-sans);
     font-size: 0.75rem;
     font-weight: 400;
-    color: var(--color-gray-600);
-    background: var(--color-light-cream);
-    border: 1px solid var(--color-tinted-cream);
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
     border-radius: 3rem;
     padding: 0.2rem 0.75rem;
     text-decoration: none;
@@ -33,21 +33,21 @@ const href = `/topics/${encodeURIComponent(topic.toLowerCase())}`;
   }
 
   .topic-pill:hover {
-    border-color: var(--color-sea-blue);
-    color: var(--color-crimson);
+    border-color: var(--accent);
+    color: var(--accent);
     transform: translateY(-1px);
   }
 
   .topic-pill.active {
-    background: var(--color-crimson);
-    border-color: var(--color-crimson);
-    color: var(--color-white);
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
   }
 
   .topic-pill.active:hover {
-    background: var(--color-bright-crimson);
-    border-color: var(--color-bright-crimson);
-    color: var(--color-white);
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+    color: #ffffff;
   }
 
   .size-md {

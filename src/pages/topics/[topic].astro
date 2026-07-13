@@ -51,9 +51,9 @@ const content = await getContentByTopic(topic);
 
 <style>
   .topic-wrapper {
-    max-width: 1400px;
+    max-width: var(--width-wide);
     margin: 0 auto;
-    padding: 0 1.5rem 4rem;
+    padding: 0 2rem 4rem;
   }
 
   .topic-header {
@@ -67,28 +67,29 @@ const content = await getContentByTopic(topic);
     gap: 0.375rem;
     font-family: var(--font-sans);
     font-size: 0.8125rem;
-    color: var(--color-gray-500);
+    color: var(--text-muted);
     text-decoration: none;
     margin-bottom: 1rem;
     transition: color 0.2s ease-in-out;
   }
 
   .back-link:hover {
-    color: var(--color-crimson);
+    color: var(--accent);
   }
 
   .topic-title {
     font-family: var(--font-serif);
     font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 400;
-    color: var(--color-gray-800);
+    font-weight: 700;
+    color: var(--text-heading);
     margin-bottom: 0.25rem;
+    text-transform: capitalize;
   }
 
   .topic-count {
     font-family: var(--font-sans);
     font-size: 0.875rem;
-    color: var(--color-gray-500);
+    color: var(--text-muted);
   }
 
   .topic-content-grid {
@@ -99,7 +100,7 @@ const content = await getContentByTopic(topic);
   }
 
   .related-topics {
-    border-top: 1px solid var(--color-tinted-cream);
+    border-top: 1px solid var(--border-color);
     padding-top: 2rem;
   }
 </style>

@@ -33,9 +33,9 @@ const essays = await getPublishedEssays();
 
 <style>
   .listing-wrapper {
-    max-width: 1400px;
+    max-width: var(--width-wide);
     margin: 0 auto;
-    padding: 0 1.5rem 4rem;
+    padding: 0 2rem 4rem;
   }
 
   .listing-header {
@@ -46,16 +46,16 @@ const essays = await getPublishedEssays();
   .listing-title {
     font-family: var(--font-serif);
     font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 400;
-    color: var(--color-gray-800);
+    font-weight: 700;
+    color: var(--text-heading);
     margin-bottom: 0.5rem;
   }
 
   .listing-description {
     font-family: var(--font-sans);
     font-size: 1rem;
-    font-weight: 300;
-    color: var(--color-gray-600);
+    font-weight: 400;
+    color: var(--text-body);
     max-width: 600px;
     line-height: 1.6;
   }

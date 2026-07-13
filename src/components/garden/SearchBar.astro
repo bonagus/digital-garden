@@ -1,0 +1,237 @@
+---
+/**
+ * SearchBar — Pagefind client-side search
+ * Loads Pagefind JS from the built index and shows results inline
+ */
+---
+
+<div class="search-container">
+  <div class="search-input-wrapper">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+    </svg>
+    <input
+      type="text"
+      id="search-input"
+      class="search-input"
+      placeholder="Search content..."
+      autocomplete="off"
+    />
+    <kbd class="search-kbd">Esc</kbd>
+  </div>
+  <div id="search-results" class="search-results"></div>
+</div>
+
+<style>
+  .search-container {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+
+  .search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 0.875rem;
+    color: var(--text-faint);
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--text-heading);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-base);
+    padding: 0.625rem 3rem 0.625rem 2.5rem;
+    outline: none;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+
+  .search-input::placeholder {
+    color: var(--text-faint);
+  }
+
+  .search-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.15);
+  }
+
+  .search-kbd {
+    position: absolute;
+    right: 0.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    color: var(--text-faint);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    padding: 0.1rem 0.375rem;
+    display: none;
+  }
+
+  .search-results {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-base);
+    box-shadow: var(--shadow-md);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 50;
+    display: none;
+  }
+
+  .search-results.active {
+    display: block;
+  }
+
+  .search-results :global(.search-result-item) {
+    display: block;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    text-decoration: none;
+    transition: background-color 0.15s ease-in-out;
+  }
+
+  .search-results :global(.search-result-item:last-child) {
+    border-bottom: none;
+  }
+
+  .search-results :global(.search-result-item:hover) {
+    background: var(--bg-secondary);
+  }
+
+  .search-results :global(.search-result-title) {
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-heading);
+    margin-bottom: 0.25rem;
+  }
+
+  .search-results :global(.search-result-item:hover .search-result-title) {
+    color: var(--accent);
+  }
+
+  .search-results :global(.search-result-excerpt) {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .search-results :global(.search-result-excerpt mark) {
+    background: rgba(217, 119, 87, 0.2);
+    color: var(--text-heading);
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
+  .search-results :global(.search-no-results) {
+    padding: 1rem;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+</style>
+
+<script>
+  async function initSearch() {
+    const input = document.getElementById('search-input') as HTMLInputElement;
+    const resultsContainer = document.getElementById('search-results') as HTMLElement;
+    const kbd = document.querySelector('.search-kbd') as HTMLElement;
+    if (!input || !resultsContainer) return;
+
+    let pagefind: any = null;
+
+    // Lazy-load Pagefind
+    async function loadPagefind() {
+      if (pagefind) return pagefind;
+      try {
+        // Dynamic path to avoid Vite resolving at build time
+        const pagefindPath = '/pagefind/pagefind.js';
+        pagefind = await import(/* @vite-ignore */ pagefindPath);
+        await pagefind.init();
+      } catch {
+        // Pagefind not available (dev mode) — fallback silently
+        pagefind = null;
+      }
+      return pagefind;
+    }
+
+    let debounceTimer: ReturnType<typeof setTimeout>;
+
+    input.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(async () => {
+        const query = input.value.trim();
+        if (!query) {
+          resultsContainer.classList.remove('active');
+          resultsContainer.innerHTML = '';
+          kbd.style.display = 'none';
+          return;
+        }
+
+        const pf = await loadPagefind();
+        if (!pf) {
+          resultsContainer.innerHTML = '<div class="search-no-results">Search unavailable in dev mode. Run <code>npm run build</code> first.</div>';
+          resultsContainer.classList.add('active');
+          return;
+        }
+
+        const search = await pf.search(query);
+        kbd.style.display = 'block';
+
+        if (search.results.length === 0) {
+          resultsContainer.innerHTML = '<div class="search-no-results">No results found.</div>';
+          resultsContainer.classList.add('active');
+          return;
+        }
+
+        const results = await Promise.all(search.results.slice(0, 8).map((r: any) => r.data()));
+        resultsContainer.innerHTML = results
+          .map((r: any) => `
+            <a href="${r.url}" class="search-result-item">
+              <div class="search-result-title">${r.meta.title || r.url}</div>
+              <div class="search-result-excerpt">${r.excerpt}</div>
+            </a>
+          `)
+          .join('');
+        resultsContainer.classList.add('active');
+      }, 200);
+    });
+
+    // Close on Escape
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        input.value = '';
+        resultsContainer.classList.remove('active');
+        resultsContainer.innerHTML = '';
+        kbd.style.display = 'none';
+        input.blur();
+      }
+    });
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+      if (!(e.target as Element).closest('.search-container')) {
+        resultsContainer.classList.remove('active');
+        kbd.style.display = 'none';
+      }
+    });
+  }
+
+  initSearch();
+  document.addEventListener('astro:page-load', initSearch);
+</script>

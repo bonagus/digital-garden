@@ -2,20 +2,21 @@
 
 /*
  * =============================================
- *  Design Tokens — Adapted from Maggie Appleton's visual system
- *  Using warm cream palette, serif headings, editorial feel
+ *  Design Tokens — Personal Digital Garden
+ *  Light theme: warm cream palette
+ *  Dark theme: Claude-inspired charcoal + orange accent
  * =============================================
  */
 
 @theme {
-  /* Colors — warm cream palette */
+  /* Light Colors — warm cream palette */
   --color-white: #ffffff;
   --color-light-cream: #fcfbf7;
   --color-cream: #f6f5f1;
   --color-tinted-cream: #e6e3e1;
   --color-black: #353534;
-  --color-gray-800: #4a4a46;
-  --color-gray-600: #73706d;
+  --color-gray-800: #2a2a28;
+  --color-gray-600: #555552;
   --color-gray-500: #8e8f94;
   --color-gray-400: #afb0b6;
   --color-gray-300: #d3d3d1;
@@ -27,6 +28,11 @@
   --color-bright-crimson: #960462;
   --color-sea-blue: #04a5bb;
   --color-medium-sea-blue: #008ba3;
+
+  /* Claude orange accent */
+  --color-accent: #D97757;
+  --color-accent-hover: #E8886A;
+  --color-accent-muted: #C4654A;
 
   /* Growth stage colors */
   --color-seedling: #04a5bb;
@@ -40,7 +46,7 @@
 
   /* Content width */
   --width-content: 42rem;
-  --width-wide: 1400px;
+  --width-wide: 1200px;
 
   /* Border radius */
   --radius-sm: 0.2rem;
@@ -64,6 +70,57 @@
 
 /*
  * =============================================
+ *  CSS Custom Properties (theme-aware)
+ * =============================================
+ */
+
+:root {
+  /* Light theme (default) */
+  --bg-primary: var(--color-cream);
+  --bg-secondary: var(--color-light-cream);
+  --bg-surface: var(--color-white);
+  --border-color: var(--color-tinted-cream);
+  --border-hover: var(--color-sea-blue);
+
+  --text-heading: var(--color-black);
+  --text-body: var(--color-gray-600);
+  --text-muted: var(--color-gray-500);
+  --text-faint: var(--color-gray-400);
+
+  --link-color: var(--color-crimson);
+  --link-hover: var(--color-bright-crimson);
+  --accent: var(--color-accent);
+  --accent-hover: var(--color-accent-hover);
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  /* Dark theme — Claude-inspired charcoal + orange */
+  --bg-primary: #1E1C1A;
+  --bg-secondary: #2A2826;
+  --bg-surface: #333130;
+  --border-color: #3E3C3A;
+  --border-hover: var(--color-accent);
+
+  --text-heading: #F5F0E8;
+  --text-body: #C8C2B8;
+  --text-muted: #9A948C;
+  --text-faint: #6E6962;
+
+  --link-color: var(--color-accent);
+  --link-hover: var(--color-accent-hover);
+  --accent: var(--color-accent);
+  --accent-hover: var(--color-accent-hover);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  color-scheme: dark;
+}
+
+/*
+ * =============================================
  *  Base Styles
  * =============================================
  */
@@ -76,10 +133,11 @@ html {
 
 body {
   font-family: var(--font-sans);
-  color: var(--color-gray-800);
-  background-color: var(--color-cream);
+  color: var(--text-body);
+  background-color: var(--bg-primary);
   line-height: 1.6;
-  font-weight: 300;
+  font-weight: 400;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {
@@ -89,8 +147,8 @@ a {
 
 h1, h2, h3, h4 {
   font-family: var(--font-serif);
-  font-weight: 400;
-  color: var(--color-gray-800);
+  font-weight: 700;
+  color: var(--text-heading);
 }
 
 /*
@@ -105,7 +163,7 @@ h1, h2, h3, h4 {
   font-size: 1.0625rem;
   line-height: 1.8;
   font-weight: 400;
-  color: var(--color-gray-800);
+  color: var(--text-body);
 }
 
 .prose h1 {
@@ -114,6 +172,7 @@ h1, h2, h3, h4 {
   margin-top: 2.5rem;
   margin-bottom: 1rem;
   line-height: 1.2;
+  color: var(--text-heading);
 }
 
 .prose h2 {
@@ -122,6 +181,7 @@ h1, h2, h3, h4 {
   margin-top: 2rem;
   margin-bottom: 0.75rem;
   line-height: 1.3;
+  color: var(--text-heading);
 }
 
 .prose h3 {
@@ -130,6 +190,7 @@ h1, h2, h3, h4 {
   margin-top: 1.75rem;
   margin-bottom: 0.5rem;
   line-height: 1.4;
+  color: var(--text-heading);
 }
 
 .prose p {
@@ -137,30 +198,30 @@ h1, h2, h3, h4 {
 }
 
 .prose a {
-  color: var(--color-crimson);
+  color: var(--link-color);
   text-decoration: underline;
   text-underline-offset: 2px;
   transition: color 0.2s ease-in-out;
 }
 
 .prose a:hover {
-  color: var(--color-bright-crimson);
+  color: var(--link-hover);
 }
 
 .prose a.wiki-link {
   text-decoration-style: dotted;
-  text-decoration-color: var(--color-sea-blue);
+  text-decoration-color: var(--accent);
 }
 
 .prose a.wiki-link:hover {
   text-decoration-style: solid;
-  color: var(--color-bright-crimson);
+  color: var(--link-hover);
 }
 
 .prose .wiki-link.broken {
-  color: var(--color-gray-500);
+  color: var(--text-muted);
   text-decoration: line-through;
-  text-decoration-color: var(--color-gray-400);
+  text-decoration-color: var(--text-faint);
   cursor: not-allowed;
 }
 
@@ -174,9 +235,9 @@ h1, h2, h3, h4 {
 }
 
 .prose blockquote {
-  border-left: 3px solid var(--color-sea-blue);
+  border-left: 3px solid var(--accent);
   padding-left: 1rem;
-  color: var(--color-gray-600);
+  color: var(--text-muted);
   font-style: italic;
   margin: 1.5rem 0;
 }
@@ -184,7 +245,8 @@ h1, h2, h3, h4 {
 .prose code {
   font-family: var(--font-mono);
   font-size: 0.875em;
-  background-color: var(--color-tinted-cream);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
   padding: 0.2em 0.4em;
   border-radius: var(--radius-sm);
 }
@@ -197,12 +259,13 @@ h1, h2, h3, h4 {
   border-radius: var(--radius-base);
   overflow-x: auto;
   margin: 1.5rem 0;
-  background-color: var(--color-light-cream);
-  border: 1px solid var(--color-tinted-cream);
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
 }
 
 .prose pre code {
   background: none;
+  border: none;
   padding: 0;
 }
 
@@ -213,12 +276,13 @@ h1, h2, h3, h4 {
 
 .prose hr {
   border: none;
-  border-top: 1px solid var(--color-tinted-cream);
+  border-top: 1px solid var(--border-color);
   margin: 2rem 0;
 }
 
 .prose strong {
   font-weight: 700;
+  color: var(--text-heading);
 }
 
 .prose table {
@@ -231,13 +295,13 @@ h1, h2, h3, h4 {
 
 .prose th, .prose td {
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--color-tinted-cream);
+  border-bottom: 1px solid var(--border-color);
   text-align: left;
 }
 
 .prose th {
   font-weight: 600;
-  color: var(--color-gray-600);
+  color: var(--text-muted);
 }
 
 /*
