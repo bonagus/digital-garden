@@ -9,6 +9,8 @@ import { getAllPublishedContent } from '../lib/content';
 const allContent = await getAllPublishedContent();
 const totalNotes = allContent.filter((c) => c.collection === 'notes').length;
 const totalEssays = allContent.filter((c) => c.collection === 'essays').length;
+const totalBooks = allContent.filter((c) => c.collection === 'books').length;
+const totalPodcasts = allContent.filter((c) => c.collection === 'podcasts').length;
 const totalProjects = allContent.filter((c) => c.collection === 'projects').length;
 const totalExperiments = allContent.filter((c) => c.collection === 'experiments').length;
 ---
@@ -26,6 +28,10 @@ const totalExperiments = allContent.filter((c) => c.collection === 'experiments'
         <span class="stat">{totalNotes} notes</span>
         <span class="stat-dot">·</span>
         <span class="stat">{totalEssays} essays</span>
+        <span class="stat-dot">·</span>
+        <span class="stat">{totalBooks} books</span>
+        <span class="stat-dot">·</span>
+        <span class="stat">{totalPodcasts} podcasts</span>
         <span class="stat-dot">·</span>
         <span class="stat">{totalProjects} projects</span>
         <span class="stat-dot">·</span>

@@ -1,10 +1,12 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ContentLayout from '../layouts/ContentLayout.astro';
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+import BookLayout from '../layouts/BookLayout.astro';
+import PodcastLayout from '../layouts/PodcastLayout.astro';
 
-// Generate static paths for all content
 export async function getStaticPaths() {
-  const collections = ['notes', 'essays', 'projects', 'experiments'] as const;
+  const collections = ['notes', 'essays', 'books', 'podcasts', 'projects', 'experiments'] as const;
   const paths = [];
 
   for (const collectionName of collections) {
@@ -20,23 +22,79 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { entry } = Astro.props;
+const { entry, collection } = Astro.props;
 const { Content } = await render(entry);
 
-// Extract frontmatter data
 const { title, description, startDate, updated, topics, growthStage } = entry.data;
 const type = 'type' in entry.data ? entry.data.type : undefined;
+const dateStr = typeof startDate === 'string' ? startDate : startDate?.toISOString();
+const updatedStr = typeof updated === 'string' ? updated : updated?.toISOString();
 ---
 
-<ContentLayout
-  title={title}
-  description={description}
-  type={type}
-  startDate={typeof startDate === 'string' ? startDate : startDate?.toISOString()}
-  updated={typeof updated === 'string' ? updated : updated?.toISOString()}
-  topics={topics}
-  growthStage={growthStage}
-  contentId={entry.id}
->
-  <Content />
-</ContentLayout>
+{collection === 'projects' ? (
+  <ProjectLayout
+    title={title}
+    description={description}
+    startDate={dateStr}
+    updated={updatedStr}
+    topics={topics}
+    growthStage={growthStage}
+    status={'status' in entry.data ? entry.data.status : undefined}
+    techStack={'techStack' in entry.data ? entry.data.techStack : undefined}
+    repoUrl={'repoUrl' in entry.data ? entry.data.repoUrl : undefined}
+    demoUrl={'demoUrl' in entry.data ? entry.data.demoUrl : undefined}
+    contentId={entry.id}
+  >
+    <Content />
+  </ProjectLayout>
+) : collection === 'books' ? (
+  <BookLayout
+    title={title}
+    description={description}
+    startDate={dateStr}
+    updated={updatedStr}
+    topics={topics}
+    growthStage={growthStage}
+    author={'author' in entry.data ? entry.data.author : ''}
+    cover={'cover' in entry.data ? entry.data.cover : undefined}
+    rating={'rating' in entry.data ? entry.data.rating : undefined}
+    year={'year' in entry.data ? entry.data.year : undefined}
+    pages={'pages' in entry.data ? entry.data.pages : undefined}
+    status={'status' in entry.data ? entry.data.status : undefined}
+    sourceUrl={'sourceUrl' in entry.data ? entry.data.sourceUrl : undefined}
+    contentId={entry.id}
+  >
+    <Content />
+  </BookLayout>
+) : collection === 'podcasts' ? (
+  <PodcastLayout
+    title={title}
+    description={description}
+    startDate={dateStr}
+    updated={updatedStr}
+    topics={topics}
+    growthStage={growthStage}
+    author={'author' in entry.data ? entry.data.author : ''}
+    cover={'cover' in entry.data ? entry.data.cover : undefined}
+    duration={'duration' in entry.data ? entry.data.duration : undefined}
+    audioUrl={'audioUrl' in entry.data ? entry.data.audioUrl : undefined}
+    sourceUrl={'sourceUrl' in entry.data ? entry.data.sourceUrl : undefined}
+    series={'series' in entry.data ? entry.data.series : undefined}
+    contentId={entry.id}
+  >
+    <Content />
+  </PodcastLayout>
+) : (
+  <ContentLayout
+    title={title}
+    description={description}
+    type={type}
+    startDate={dateStr}
+    updated={updatedStr}
+    topics={topics}
+    growthStage={growthStage}
+    contentId={entry.id}
+  >
+    <Content />
+  </ContentLayout>
+)}

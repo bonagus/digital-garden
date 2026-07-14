@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import Backlinks from '../components/content/Backlinks.astro';
+import RelatedContent from '../components/content/RelatedContent.astro';
 
 interface Props {
   title: string;
@@ -83,6 +84,9 @@ function formatFullDate(date?: string): string {
     <div class="prose">
       <slot />
     </div>
+
+    <!-- Related Content -->
+    {contentId && topics && topics.length > 0 && <RelatedContent contentId={contentId} topics={topics} />}
 
     <!-- Backlinks -->
     {contentId && <Backlinks contentId={contentId} />}

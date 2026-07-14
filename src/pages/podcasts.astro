@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PodcastCard from '../components/content/PodcastCard.astro';
+import { getPublishedPodcasts } from '../lib/content';
+
+const podcasts = await getPublishedPodcasts();
+---
+
+<BaseLayout title="Podcasts" description="Catatan dari audiobook dan podcast — pelajaran yang saya dengarkan.">
+  <div class="listing-wrapper">
+    <header class="listing-header">
+      <h1 class="listing-title">Podcasts & Audiobooks</h1>
+      <p class="listing-description">
+        Catatan dari audiobook dan podcast yang saya dengarkan. Media audio sebagai cara belajar yang berbeda — mendengar ide sambil beraktivitas.
+      </p>
+    </header>
+
+    <div class="podcasts-grid">
+      {podcasts.map((podcast) => (
+        <PodcastCard
+          title={podcast.data.title}
+          description={podcast.data.description}
+          href={`/${podcast.id}`}
+          author={podcast.data.author}
+          cover={podcast.data.cover}
+          duration={podcast.data.duration}
+          series={podcast.data.series}
+          startDate={podcast.data.startDate}
+          topics={podcast.data.topics}
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .listing-wrapper {
+    max-width: var(--width-wide);
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .listing-header {
+    margin-top: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .listing-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 0.5rem;
+  }
+
+  .listing-description {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-body);
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  .podcasts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 0.75rem;
+  }
+</style>

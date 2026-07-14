@@ -40,6 +40,44 @@ const essays = defineCollection({
 });
 
 /**
+ * Books — review buku, catatan bacaan, book notes
+ */
+const books = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/books' }),
+  schema: z.object({
+    ...baseFields,
+    type: z.literal('book').default('book'),
+    author: z.string(),
+    cover: z.string().optional(),
+    rating: z.number().min(1).max(5).optional(),
+    isbn: z.string().optional(),
+    publisher: z.string().optional(),
+    year: z.number().optional(),
+    pages: z.number().optional(),
+    status: z.enum(['reading', 'finished', 'abandoned']).default('finished'),
+    sourceUrl: z.string().url().optional(),
+  }),
+});
+
+/**
+ * Podcasts — audiobook notes, podcast catatan, media audio
+ */
+const podcasts = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/podcasts' }),
+  schema: z.object({
+    ...baseFields,
+    type: z.literal('podcast').default('podcast'),
+    author: z.string(),
+    cover: z.string().optional(),
+    duration: z.string().optional(),
+    audioUrl: z.string().url().optional(),
+    sourceUrl: z.string().url().optional(),
+    episode: z.string().optional(),
+    series: z.string().optional(),
+  }),
+});
+
+/**
  * Projects — showcase project, case study, dokumentasi teknis
  */
 const projects = defineCollection({
@@ -48,9 +86,11 @@ const projects = defineCollection({
     ...baseFields,
     type: z.literal('project').default('project'),
     status: z.enum(['active', 'completed', 'archived', 'paused']).default('active'),
+    featured: z.boolean().default(false),
     techStack: z.array(z.string()).default([]),
     repoUrl: z.string().url().optional(),
     demoUrl: z.string().url().optional(),
+    cover: z.string().optional(),
   }),
 });
 
@@ -81,6 +121,8 @@ const pages = defineCollection({
 export const collections = {
   notes,
   essays,
+  books,
+  podcasts,
   projects,
   experiments,
   pages,

@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ContentCard from '../components/content/ContentCard.astro';
+import ProjectCard from '../components/content/ProjectCard.astro';
 import { getPublishedProjects } from '../lib/content';
 
-const projects = await getPublishedProjects();
+const allProjects = await getPublishedProjects();
+const featured = allProjects.filter((p) => p.data.featured);
+const other = allProjects.filter((p) => !p.data.featured);
 ---
 
 <BaseLayout title="Projects" description="Showcase project dan dokumentasi teknis.">
@@ -15,19 +17,52 @@ const projects = await getPublishedProjects();
       </p>
     </header>
 
-    <div class="listing-grid">
-      {projects.map((project) => (
-        <ContentCard
-          title={project.data.title}
-          description={project.data.description}
-          href={`/${project.id}`}
-          type="project"
-          startDate={project.data.startDate}
-          topics={project.data.topics}
-          growthStage={project.data.growthStage}
-        />
-      ))}
-    </div>
+    {/* Featured Projects */}
+    {featured.length > 0 && (
+      <section class="featured-section">
+        <h2 class="section-label">Featured</h2>
+        <div class="featured-grid">
+          {featured.map((project) => (
+            <ProjectCard
+              title={project.data.title}
+              description={project.data.description}
+              href={`/${project.id}`}
+              startDate={project.data.startDate}
+              topics={project.data.topics}
+              growthStage={project.data.growthStage}
+              status={project.data.status}
+              techStack={project.data.techStack}
+              repoUrl={project.data.repoUrl}
+              demoUrl={project.data.demoUrl}
+              featured={true}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+
+    {/* All Projects */}
+    {other.length > 0 && (
+      <section class="all-section">
+        {featured.length > 0 && <h2 class="section-label">All Projects</h2>}
+        <div class="listing-grid">
+          {other.map((project) => (
+            <ProjectCard
+              title={project.data.title}
+              description={project.data.description}
+              href={`/${project.id}`}
+              startDate={project.data.startDate}
+              topics={project.data.topics}
+              growthStage={project.data.growthStage}
+              status={project.data.status}
+              techStack={project.data.techStack}
+              repoUrl={project.data.repoUrl}
+              demoUrl={project.data.demoUrl}
+            />
+          ))}
+        </div>
+      </section>
+    )}
   </div>
 </BaseLayout>
 
@@ -58,6 +93,30 @@ const projects = await getPublishedProjects();
     color: var(--text-body);
     max-width: 600px;
     line-height: 1.6;
+  }
+
+  .section-label {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .featured-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1rem;
+  }
+
+  .all-section {
+    margin-bottom: 2rem;
   }
 
   .listing-grid {

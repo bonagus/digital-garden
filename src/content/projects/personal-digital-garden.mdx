@@ -1,59 +1,69 @@
 ---
 title: "Personal Digital Garden"
-description: "Website personal berbasis digital garden yang dibangun dengan Astro, TypeScript, Tailwind CSS, dan MDX."
+description: "Website personal berbasis digital garden yang dibangun dengan Astro, TypeScript, Tailwind CSS, dan MDX. Tempat ide tumbuh, catatan berkembang, dan pengetahuan terhubung."
 startDate: "2026-07-12"
-updated: "2026-07-12"
+updated: "2026-07-13"
 topics: ["astro", "web-development", "digital-garden"]
 growthStage: "budding"
 status: "active"
-techStack: ["Astro", "TypeScript", "Tailwind CSS", "MDX"]
+featured: true
+techStack: ["Astro", "TypeScript", "Tailwind CSS", "MDX", "Pagefind"]
 repoUrl: "https://github.com/bonagus/digital-garden"
+demoUrl: "https://bonagus.com"
 aliases: ["Bonagus Garden", "Digital Garden Project"]
 ---
 
-## Overview
+## Masalah
 
-Project ini adalah implementasi konsep [[Membangun Digital Garden]] menggunakan stack modern:
+Blog tradisional bersifat kronologis — tulisan lama tenggelam, tidak ada hubungan antar catatan, dan tidak mendorong penulis untuk memperbaiki tulisan lama. Saya butuh tempat yang lebih organik untuk menumbuhkan pengetahuan.
 
-- **Astro** — static site generator (lihat [[Belajar Astro Framework]])
-- **TypeScript** — type safety
-- **Tailwind CSS** — utility-first styling (eksperimen di [[Eksperimen Tailwind CSS v4]])
-- **MDX** — markdown + komponen
+## Solusi
 
-## Fitur
+Membangun **digital garden** — sebuah website personal di mana catatan bisa saling terhubung melalui [[Membangun Digital Garden|wiki links]], tumbuh dari seedling menjadi evergreen, dan diorganisasi berdasarkan topik bukan tanggal.
 
-### Sudah Diimplementasi
+## Teknologi
 
-- ✅ Content Collections dengan schema Zod
+- **[[Belajar Astro Framework|Astro]]** — static site generator dengan island architecture
+- **TypeScript** — type safety end-to-end
+- **[[Eksperimen Tailwind CSS v4|Tailwind CSS v4]]** — utility-first styling
+- **MDX** — markdown dengan komponen interaktif
+- **Pagefind** — client-side full-text search
+
+## Fitur yang Sudah Diimplementasi
+
+- ✅ Content Collections dengan schema validation (Zod)
 - ✅ Wiki links (`[[Judul]]`) dengan resolusi otomatis
-- ✅ Backlinks di setiap halaman
+- ✅ Backlinks di setiap halaman konten
 - ✅ Topic/tag system dengan halaman per topic
 - ✅ Growth stages (seedling → budding → evergreen)
 - ✅ Client-side filtering di Garden index
-- ✅ Responsive design
+- ✅ Dark mode dengan tema Claude (charcoal + orange accent)
+- ✅ Full-text search (Pagefind)
 - ✅ RSS feed & sitemap
+- ✅ Responsive design
+- ✅ SEO & Open Graph metadata
 
-### Roadmap
+## Tantangan
 
-- 🔜 Knowledge graph visualization
-- 🔜 Full-text search
-- 🔜 Related content suggestions
-- 🔜 Dark mode
-
-## Arsitektur
-
-```
-src/
-├── content/          # MDX content (notes, essays, projects, experiments)
-├── components/       # Astro components
-├── layouts/          # Page layouts
-├── lib/              # Utilities & helpers
-├── plugins/          # Remark/rehype plugins
-└── styles/           # Global CSS & design tokens
-```
+1. **Wiki link resolution** — butuh pre-build step (`generate-links.ts`) yang membaca semua MDX, extract frontmatter + aliases, dan generate link map JSON sebelum Astro build.
+2. **Pagefind + Vite** — dynamic import harus di-wrap dengan `@vite-ignore` karena Pagefind files baru ada setelah build.
+3. **Dark mode di static site** — harus inject inline script di `<head>` sebelum render untuk prevent flash of wrong theme.
 
 ## Pelajaran
 
-1. **Astro Content Collections** sangat powerful untuk validasi schema
-2. **Wiki links** butuh pre-build step untuk generate link map
-3. **Static output** memungkinkan hosting sangat murah
+1. **Astro Content Collections** sangat powerful untuk validasi schema — error muncul saat build, bukan di runtime.
+2. **Static output** memungkinkan hosting gratis dan performa sangat cepat.
+3. **Digital garden** sebagai format lebih cocok untuk learner — catatan boleh belum sempurna.
+
+## Arsitektur
+
+```text
+src/
+├── content/          # MDX content (notes, essays, projects, experiments)
+├── components/       # Astro components (layout, content, garden)
+├── layouts/          # Page layouts (Base, Content, Project, Page)
+├── lib/              # Utilities & helpers (content, links)
+├── plugins/          # Remark plugins (wiki-link)
+├── data/             # Generated data (links.json)
+└── styles/           # Global CSS & design tokens
+```

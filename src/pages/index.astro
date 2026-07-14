@@ -1,17 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContentCard from '../components/content/ContentCard.astro';
-import { getPublishedNotes, getPublishedEssays, getPublishedProjects, getPublishedExperiments } from '../lib/content';
+import ProjectCard from '../components/content/ProjectCard.astro';
+import BookCard from '../components/content/BookCard.astro';
+import PodcastCard from '../components/content/PodcastCard.astro';
+import { getPublishedNotes, getPublishedEssays, getPublishedBooks, getPublishedPodcasts, getPublishedProjects, getPublishedExperiments } from '../lib/content';
 
 const notes = await getPublishedNotes();
 const essays = await getPublishedEssays();
+const books = await getPublishedBooks();
+const podcasts = await getPublishedPodcasts();
 const projects = await getPublishedProjects();
 const experiments = await getPublishedExperiments();
 
-const recentNotes = notes.slice(0, 8);
-const recentEssays = essays.slice(0, 4);
-const recentProjects = projects.slice(0, 4);
-const recentExperiments = experiments.slice(0, 4);
+const recentNotes = notes.slice(0, 6);
+const recentEssays = essays.slice(0, 3);
+const recentBooks = books.slice(0, 3);
+const recentPodcasts = podcasts.slice(0, 3);
+const featuredProjects = projects.filter((p) => p.data.featured);
+const recentProjects = featuredProjects.length > 0 ? featuredProjects.slice(0, 4) : projects.slice(0, 3);
+const recentExperiments = experiments.slice(0, 3);
 ---
 
 <BaseLayout title="Home">
@@ -95,6 +103,62 @@ const recentExperiments = experiments.slice(0, 4);
         </div>
       </section>
 
+      <!-- Books Section -->
+      <section class="books-section">
+        <a href="/books" class="section-header-link">
+          <h3 class="section-header">
+            Books
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" class="header-arrow">
+              <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638l-3.96-4.158a.75.75 0 011.08-1.04l5.25 5.5a.75.75 0 010 1.04l-5.25 5.5a.75.75 0 01-1.08-1.04l3.96-4.158H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+            </svg>
+          </h3>
+        </a>
+        <p class="section-description">Review buku dan catatan bacaan.</p>
+        <div class="books-grid">
+          {recentBooks.map((book) => (
+            <BookCard
+              title={book.data.title}
+              description={book.data.description}
+              href={`/${book.id}`}
+              author={book.data.author}
+              cover={book.data.cover}
+              rating={book.data.rating}
+              startDate={book.data.startDate}
+              topics={book.data.topics}
+              status={book.data.status}
+            />
+          ))}
+        </div>
+      </section>
+
+      <!-- Podcasts Section -->
+      <section class="podcasts-section">
+        <a href="/podcasts" class="section-header-link">
+          <h3 class="section-header">
+            Podcasts & Audiobooks
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" class="header-arrow">
+              <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638l-3.96-4.158a.75.75 0 011.08-1.04l5.25 5.5a.75.75 0 010 1.04l-5.25 5.5a.75.75 0 01-1.08-1.04l3.96-4.158H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+            </svg>
+          </h3>
+        </a>
+        <p class="section-description">Catatan dari audiobook dan podcast yang saya dengarkan.</p>
+        <div class="podcasts-grid">
+          {recentPodcasts.map((podcast) => (
+            <PodcastCard
+              title={podcast.data.title}
+              description={podcast.data.description}
+              href={`/${podcast.id}`}
+              author={podcast.data.author}
+              cover={podcast.data.cover}
+              duration={podcast.data.duration}
+              series={podcast.data.series}
+              startDate={podcast.data.startDate}
+              topics={podcast.data.topics}
+            />
+          ))}
+        </div>
+      </section>
+
       <!-- Projects Section -->
       <section class="projects-section">
         <a href="/projects" class="section-header-link">
@@ -108,14 +172,18 @@ const recentExperiments = experiments.slice(0, 4);
         <p class="section-description">Showcase project dan dokumentasi teknis.</p>
         <div class="projects-grid">
           {recentProjects.map((project) => (
-            <ContentCard
+            <ProjectCard
               title={project.data.title}
               description={project.data.description}
               href={`/${project.id}`}
-              type="project"
               startDate={project.data.startDate}
               topics={project.data.topics}
               growthStage={project.data.growthStage}
+              status={project.data.status}
+              techStack={project.data.techStack}
+              repoUrl={project.data.repoUrl}
+              demoUrl={project.data.demoUrl}
+              featured={project.data.featured}
             />
           ))}
         </div>
@@ -246,6 +314,7 @@ const recentExperiments = experiments.slice(0, 4);
     grid-template-rows: auto;
     grid-template-areas:
       "essays notes"
+      "books podcasts"
       "projects experiments";
     gap: 2.5rem;
     margin-bottom: 4rem;
@@ -257,6 +326,14 @@ const recentExperiments = experiments.slice(0, 4);
 
   .notes-section {
     grid-area: notes;
+  }
+
+  .books-section {
+    grid-area: books;
+  }
+
+  .podcasts-section {
+    grid-area: podcasts;
   }
 
   .projects-section {
@@ -273,6 +350,8 @@ const recentExperiments = experiments.slice(0, 4);
       grid-template-areas:
         "essays"
         "notes"
+        "books"
+        "podcasts"
         "projects"
         "experiments";
       gap: 2rem;

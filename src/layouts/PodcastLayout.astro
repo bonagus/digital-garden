@@ -1,0 +1,335 @@
+---
+/**
+ * PodcastLayout — detail page for podcast/audiobook entries
+ * Cover with play overlay, series info, and prose content
+ */
+import BaseLayout from './BaseLayout.astro';
+import Backlinks from '../components/content/Backlinks.astro';
+import RelatedContent from '../components/content/RelatedContent.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  startDate?: string;
+  updated?: string;
+  topics?: string[];
+  growthStage?: 'seedling' | 'budding' | 'evergreen';
+  author: string;
+  cover?: string;
+  duration?: string;
+  audioUrl?: string;
+  sourceUrl?: string;
+  series?: string;
+  contentId?: string;
+}
+
+const {
+  title, description, startDate, updated, topics, growthStage,
+  author, cover, duration, audioUrl, sourceUrl, series, contentId,
+} = Astro.props;
+
+const growthEmoji = { seedling: '🌱', budding: '🌿', evergreen: '🌳' };
+
+function formatFullDate(date?: string): string {
+  if (!date) return '';
+  return new Date(date).toLocaleDateString('id-ID', {
+    year: 'numeric', month: 'long', day: 'numeric',
+  });
+}
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="podcast-article">
+    <header class="podcast-header">
+      <div class="podcast-header-layout">
+        {/* Cover */}
+        <div class="cover-column">
+          {cover ? (
+            <div class="cover-wrapper">
+              <img src={cover} alt={`Cover of ${title}`} class="podcast-cover" />
+              <div class="play-overlay">
+                <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                </svg>
+              </div>
+            </div>
+          ) : (
+            <div class="cover-placeholder">
+              <span>🎧</span>
+            </div>
+          )}
+        </div>
+
+        {/* Info */}
+        <div class="info-column">
+          <div class="meta-top">
+            <span class="content-type">Podcast / Audiobook</span>
+            {growthStage && (
+              <span class="growth-badge">
+                <span>{growthEmoji[growthStage]}</span>
+                {growthStage}
+              </span>
+            )}
+          </div>
+
+          {series && <p class="podcast-series">{series}</p>}
+          <h1 class="podcast-title">{title}</h1>
+          <p class="podcast-author">by {author}</p>
+
+          {description && <p class="podcast-description">{description}</p>}
+
+          <div class="podcast-meta">
+            {duration && <span class="meta-item">⏱ {duration}</span>}
+            {startDate && <span class="meta-item">Listened {formatFullDate(startDate)}</span>}
+          </div>
+
+          {/* Audio player */}
+          {audioUrl && (
+            <div class="audio-player">
+              <audio controls preload="metadata" class="audio-element">
+                <source src={audioUrl} />
+              </audio>
+            </div>
+          )}
+
+          {/* Links */}
+          {sourceUrl && (
+            <a href={sourceUrl} target="_blank" rel="noopener noreferrer" class="source-link">
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5z" clip-rule="evenodd" />
+                <path fill-rule="evenodd" d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.194a.75.75 0 00-.053 1.06z" clip-rule="evenodd" />
+              </svg>
+              Original Post
+            </a>
+          )}
+
+          {topics && topics.length > 0 && (
+            <div class="podcast-topics">
+              {topics.map((topic) => (
+                <a href={`/topics/${encodeURIComponent(topic.toLowerCase())}`} class="topic-pill">{topic}</a>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    {contentId && topics && topics.length > 0 && <RelatedContent contentId={contentId} topics={topics} />}
+    {contentId && <Backlinks contentId={contentId} />}
+  </article>
+</BaseLayout>
+
+<style>
+  .podcast-article {
+    max-width: var(--width-content);
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .podcast-header {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .podcast-header-layout {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 640px) {
+    .podcast-header-layout {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  }
+
+  .cover-column {
+    flex-shrink: 0;
+    width: 140px;
+  }
+
+  .cover-wrapper {
+    position: relative;
+    border-radius: var(--radius-base);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+
+  .podcast-cover {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    color: white;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .cover-wrapper:hover .play-overlay {
+    opacity: 1;
+  }
+
+  .cover-placeholder {
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-base);
+    font-size: 2.5rem;
+  }
+
+  .info-column {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .meta-top {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.375rem;
+    flex-wrap: wrap;
+  }
+
+  .content-type {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+  }
+
+  .growth-badge {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .podcast-series {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-muted);
+    margin: 0 0 0.25rem 0;
+  }
+
+  .podcast-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    font-weight: 700;
+    color: var(--text-heading);
+    line-height: 1.2;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .podcast-author {
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin: 0 0 0.5rem 0;
+    font-style: italic;
+  }
+
+  .podcast-description {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--text-body);
+    line-height: 1.5;
+    margin: 0 0 0.75rem 0;
+  }
+
+  .podcast-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .meta-item {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .audio-player {
+    margin-bottom: 0.75rem;
+  }
+
+  .audio-element {
+    width: 100%;
+    max-width: 400px;
+    height: 36px;
+    border-radius: var(--radius-base);
+  }
+
+  .source-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 0.3rem 0.625rem;
+    text-decoration: none;
+    margin-bottom: 0.75rem;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .source-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .podcast-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .topic-pill {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 3rem;
+    padding: 0.15rem 0.625rem;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .topic-pill:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+</style>

@@ -1,0 +1,325 @@
+---
+/**
+ * /graph — Interactive Knowledge Graph
+ * Shows connections between all content (based on wiki links + shared topics)
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAllPublishedContent } from '../lib/content';
+import linksData from '../data/links.json';
+
+const allContent = await getAllPublishedContent();
+
+// Build graph nodes
+const nodes = allContent.map((entry) => {
+  const entryType = 'type' in entry.data ? entry.data.type : 'note';
+  return {
+    id: entry.id,
+    title: entry.data.title,
+    type: entryType,
+    topics: entry.data.topics,
+    growthStage: entry.data.growthStage || 'seedling',
+  };
+});
+
+// Build graph edges from wiki links
+const edges: { source: string; target: string; type: string }[] = [];
+const outbound = (linksData as any).outbound || {};
+
+for (const [sourceId, targets] of Object.entries(outbound)) {
+  for (const targetId of targets as string[]) {
+    // Only add edge if both nodes exist
+    if (nodes.find((n) => n.id === sourceId) && nodes.find((n) => n.id === targetId)) {
+      edges.push({ source: sourceId, target: targetId, type: 'wikilink' });
+    }
+  }
+}
+
+// Add topic-based edges (lighter weight)
+for (let i = 0; i < nodes.length; i++) {
+  for (let j = i + 1; j < nodes.length; j++) {
+    const shared = nodes[i].topics.filter((t) => nodes[j].topics.includes(t));
+    if (shared.length >= 2 && !edges.find((e) =>
+      (e.source === nodes[i].id && e.target === nodes[j].id) ||
+      (e.source === nodes[j].id && e.target === nodes[i].id)
+    )) {
+      edges.push({ source: nodes[i].id, target: nodes[j].id, type: 'topic' });
+    }
+  }
+}
+
+const graphData = JSON.stringify({ nodes, edges });
+---
+
+<BaseLayout title="Knowledge Graph" description="Visualisasi hubungan antar catatan dalam digital garden.">
+  <div class="graph-wrapper">
+    <header class="graph-header">
+      <h1 class="graph-title">Knowledge Graph</h1>
+      <p class="graph-description">
+        Visualisasi hubungan antar catatan. Garis solid = wiki link, garis putus = shared topics.
+      </p>
+      <div class="graph-legend">
+        <span class="legend-item"><span class="legend-dot" style="background: var(--accent)"></span> Note</span>
+        <span class="legend-item"><span class="legend-dot" style="background: var(--color-evergreen)"></span> Essay</span>
+        <span class="legend-item"><span class="legend-dot" style="background: var(--color-budding)"></span> Project</span>
+        <span class="legend-item"><span class="legend-dot" style="background: #7C9CBF"></span> Experiment</span>
+      </div>
+    </header>
+    <div id="graph-container" class="graph-container"></div>
+    <div id="graph-tooltip" class="graph-tooltip"></div>
+  </div>
+</BaseLayout>
+
+<style>
+  .graph-wrapper {
+    max-width: var(--width-wide);
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .graph-header {
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .graph-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 0.5rem;
+  }
+
+  .graph-description {
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    color: var(--text-body);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+
+  .graph-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .graph-container {
+    width: 100%;
+    height: 500px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-base);
+    background: var(--bg-secondary);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .graph-tooltip {
+    position: fixed;
+    display: none;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.75rem;
+    box-shadow: var(--shadow-md);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--text-heading);
+    pointer-events: none;
+    z-index: 100;
+    max-width: 200px;
+  }
+
+  @media (max-width: 640px) {
+    .graph-container {
+      height: 350px;
+    }
+  }
+</style>
+
+<script define:vars={{ graphData }}>
+  const data = JSON.parse(graphData);
+
+  function initGraph() {
+    const container = document.getElementById('graph-container');
+    const tooltip = document.getElementById('graph-tooltip');
+    if (!container || !tooltip) return;
+
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    // Create SVG
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', '100%');
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    container.appendChild(svg);
+
+    // Color map
+    const colors = {
+      note: '#D97757',
+      essay: '#4A7C59',
+      project: '#B8860B',
+      experiment: '#7C9CBF',
+    };
+
+    // Simple force simulation (no D3 dependency)
+    const nodes = data.nodes.map((n, i) => ({
+      ...n,
+      x: width / 2 + (Math.random() - 0.5) * width * 0.6,
+      y: height / 2 + (Math.random() - 0.5) * height * 0.6,
+      vx: 0,
+      vy: 0,
+    }));
+
+    const edges = data.edges.map((e) => ({
+      ...e,
+      sourceNode: nodes.find((n) => n.id === e.source),
+      targetNode: nodes.find((n) => n.id === e.target),
+    })).filter((e) => e.sourceNode && e.targetNode);
+
+    // Force simulation parameters
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const repulsion = 2000;
+    const attraction = 0.01;
+    const damping = 0.85;
+    const iterations = 150;
+
+    // Run simulation
+    for (let iter = 0; iter < iterations; iter++) {
+      // Repulsion between all nodes
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          let dx = nodes[j].x - nodes[i].x;
+          let dy = nodes[j].y - nodes[i].y;
+          let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          let force = repulsion / (dist * dist);
+          let fx = (dx / dist) * force;
+          let fy = (dy / dist) * force;
+          nodes[i].vx -= fx;
+          nodes[i].vy -= fy;
+          nodes[j].vx += fx;
+          nodes[j].vy += fy;
+        }
+      }
+
+      // Attraction along edges
+      for (const edge of edges) {
+        let dx = edge.targetNode.x - edge.sourceNode.x;
+        let dy = edge.targetNode.y - edge.sourceNode.y;
+        let dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        let force = attraction * dist;
+        let fx = (dx / dist) * force;
+        let fy = (dy / dist) * force;
+        edge.sourceNode.vx += fx;
+        edge.sourceNode.vy += fy;
+        edge.targetNode.vx -= fx;
+        edge.targetNode.vy -= fy;
+      }
+
+      // Center gravity
+      for (const node of nodes) {
+        node.vx += (centerX - node.x) * 0.005;
+        node.vy += (centerY - node.y) * 0.005;
+      }
+
+      // Apply velocities
+      for (const node of nodes) {
+        node.vx *= damping;
+        node.vy *= damping;
+        node.x += node.vx;
+        node.y += node.vy;
+        // Bounds
+        node.x = Math.max(30, Math.min(width - 30, node.x));
+        node.y = Math.max(30, Math.min(height - 30, node.y));
+      }
+    }
+
+    // Render edges
+    for (const edge of edges) {
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', String(edge.sourceNode.x));
+      line.setAttribute('y1', String(edge.sourceNode.y));
+      line.setAttribute('x2', String(edge.targetNode.x));
+      line.setAttribute('y2', String(edge.targetNode.y));
+      line.setAttribute('stroke', 'var(--border-color)');
+      line.setAttribute('stroke-width', edge.type === 'wikilink' ? '1.5' : '0.75');
+      if (edge.type === 'topic') {
+        line.setAttribute('stroke-dasharray', '4 3');
+      }
+      line.setAttribute('opacity', '0.6');
+      svg.appendChild(line);
+    }
+
+    // Render nodes
+    for (const node of nodes) {
+      const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      group.style.cursor = 'pointer';
+
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', String(node.x));
+      circle.setAttribute('cy', String(node.y));
+      const radius = node.growthStage === 'evergreen' ? 10 : node.growthStage === 'budding' ? 8 : 6;
+      circle.setAttribute('r', String(radius));
+      circle.setAttribute('fill', colors[node.type] || colors.note);
+      circle.setAttribute('stroke', 'var(--bg-primary)');
+      circle.setAttribute('stroke-width', '2');
+      group.appendChild(circle);
+
+      // Label
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('x', String(node.x));
+      text.setAttribute('y', String(node.y + radius + 14));
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('fill', 'var(--text-muted)');
+      text.setAttribute('font-size', '10');
+      text.setAttribute('font-family', 'var(--font-sans)');
+      text.textContent = node.title.length > 18 ? node.title.slice(0, 16) + '…' : node.title;
+      group.appendChild(text);
+
+      // Interactions
+      group.addEventListener('mouseenter', (e) => {
+        circle.setAttribute('stroke', colors[node.type] || colors.note);
+        circle.setAttribute('stroke-width', '3');
+        tooltip.style.display = 'block';
+        tooltip.innerHTML = `<strong>${node.title}</strong><br><span style="opacity:0.7">${node.type} · ${node.growthStage}</span>`;
+      });
+
+      group.addEventListener('mousemove', (e) => {
+        tooltip.style.left = e.clientX + 12 + 'px';
+        tooltip.style.top = e.clientY - 10 + 'px';
+      });
+
+      group.addEventListener('mouseleave', () => {
+        circle.setAttribute('stroke', 'var(--bg-primary)');
+        circle.setAttribute('stroke-width', '2');
+        tooltip.style.display = 'none';
+      });
+
+      group.addEventListener('click', () => {
+        window.location.href = `/${node.id}/`;
+      });
+
+      svg.appendChild(group);
+    }
+  }
+
+  initGraph();
+  document.addEventListener('astro:page-load', initGraph);
+</script>

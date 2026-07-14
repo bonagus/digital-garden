@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BookCard from '../components/content/BookCard.astro';
+import { getPublishedBooks } from '../lib/content';
+
+const books = await getPublishedBooks();
+---
+
+<BaseLayout title="Books" description="Catatan bacaan, review buku, dan pelajaran dari buku-buku yang saya baca.">
+  <div class="listing-wrapper">
+    <header class="listing-header">
+      <h1 class="listing-title">Books</h1>
+      <p class="listing-description">
+        Catatan bacaan dan review buku. Setiap buku yang saya baca, saya coba catat pelajaran dan refleksi yang bisa dibawa pulang.
+      </p>
+    </header>
+
+    <div class="books-grid">
+      {books.map((book) => (
+        <BookCard
+          title={book.data.title}
+          description={book.data.description}
+          href={`/${book.id}`}
+          author={book.data.author}
+          cover={book.data.cover}
+          rating={book.data.rating}
+          startDate={book.data.startDate}
+          topics={book.data.topics}
+          status={book.data.status}
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .listing-wrapper {
+    max-width: var(--width-wide);
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .listing-header {
+    margin-top: 2.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .listing-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 0.5rem;
+  }
+
+  .listing-description {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-body);
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  .books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 0.75rem;
+  }
+</style>

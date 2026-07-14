@@ -1,0 +1,26 @@
+---
+/**
+ * Analytics — lightweight, privacy-friendly analytics placeholder
+ * Replace the script src with your Umami or GoatCounter instance URL
+ *
+ * Options:
+ * - Umami: https://cloud.umami.is
+ * - GoatCounter: https://www.goatcounter.com
+ *
+ * Set environment variables:
+ * - PUBLIC_ANALYTICS_URL: script URL
+ * - PUBLIC_ANALYTICS_ID: website/site ID
+ */
+const analyticsUrl = import.meta.env.PUBLIC_ANALYTICS_URL || '';
+const analyticsId = import.meta.env.PUBLIC_ANALYTICS_ID || '';
+const enabled = !!analyticsUrl && !!analyticsId;
+---
+
+{enabled && (
+  <script
+    is:inline
+    defer
+    src={analyticsUrl}
+    data-website-id={analyticsId}
+  />
+)}

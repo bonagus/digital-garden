@@ -4,9 +4,11 @@ import type { CollectionEntry } from 'astro:content';
 // Types
 export type NoteEntry = CollectionEntry<'notes'>;
 export type EssayEntry = CollectionEntry<'essays'>;
+export type BookEntry = CollectionEntry<'books'>;
+export type PodcastEntry = CollectionEntry<'podcasts'>;
 export type ProjectEntry = CollectionEntry<'projects'>;
 export type ExperimentEntry = CollectionEntry<'experiments'>;
-export type AnyContentEntry = NoteEntry | EssayEntry | ProjectEntry | ExperimentEntry;
+export type AnyContentEntry = NoteEntry | EssayEntry | BookEntry | PodcastEntry | ProjectEntry | ExperimentEntry;
 
 /**
  * Filter out draft entries in production
@@ -46,6 +48,22 @@ export async function getPublishedEssays(): Promise<EssayEntry[]> {
 }
 
 /**
+ * Get published books
+ */
+export async function getPublishedBooks(): Promise<BookEntry[]> {
+  const entries = await getCollection('books');
+  return sortByDate(filterDrafts(entries));
+}
+
+/**
+ * Get published podcasts
+ */
+export async function getPublishedPodcasts(): Promise<PodcastEntry[]> {
+  const entries = await getCollection('podcasts');
+  return sortByDate(filterDrafts(entries));
+}
+
+/**
  * Get published projects
  */
 export async function getPublishedProjects(): Promise<ProjectEntry[]> {
@@ -65,13 +83,15 @@ export async function getPublishedExperiments(): Promise<ExperimentEntry[]> {
  * Get all published content (all types combined)
  */
 export async function getAllPublishedContent(): Promise<AnyContentEntry[]> {
-  const [notes, essays, projects, experiments] = await Promise.all([
+  const [notes, essays, books, podcasts, projects, experiments] = await Promise.all([
     getPublishedNotes(),
     getPublishedEssays(),
+    getPublishedBooks(),
+    getPublishedPodcasts(),
     getPublishedProjects(),
     getPublishedExperiments(),
   ]);
-  return sortByDate([...notes, ...essays, ...projects, ...experiments]);
+  return sortByDate([...notes, ...essays, ...books, ...podcasts, ...projects, ...experiments]);
 }
 
 /**
@@ -94,6 +114,27 @@ export async function getAllTopics(): Promise<string[]> {
 export async function getContentByTopic(topic: string): Promise<AnyContentEntry[]> {
   const allContent = await getAllPublishedContent();
   return allContent.filter((entry) => entry.data.topics.includes(topic));
+}
+
+/**
+ * Get related content for a given entry based on shared topics
+ * Returns up to `limit` entries sorted by relevance (most shared topics first)
+ */
+export async function getRelatedContent(
+  currentId: string,
+  currentTopics: string[],
+  limit = 4,
+): Promise<AnyContentEntry[]> {
+  const allContent = await getAllPublishedContent();
+  const scored = allContent
+    .filter((entry) => entry.id !== currentId)
+    .map((entry) => {
+      const shared = entry.data.topics.filter((t) => currentTopics.includes(t)).length;
+      return { entry, shared };
+    })
+    .filter((item) => item.shared > 0)
+    .sort((a, b) => b.shared - a.shared);
+  return scored.slice(0, limit).map((item) => item.entry);
 }
 
 /**

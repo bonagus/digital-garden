@@ -72,6 +72,30 @@
         "Konsep Digital Garden"
       ]
     },
+    "cli task manager": {
+      "id": "cli-task-manager",
+      "title": "CLI Task Manager",
+      "collection": "projects",
+      "aliases": [
+        "Task CLI"
+      ]
+    },
+    "cli-task-manager": {
+      "id": "cli-task-manager",
+      "title": "CLI Task Manager",
+      "collection": "projects",
+      "aliases": [
+        "Task CLI"
+      ]
+    },
+    "task cli": {
+      "id": "cli-task-manager",
+      "title": "CLI Task Manager",
+      "collection": "projects",
+      "aliases": [
+        "Task CLI"
+      ]
+    },
     "personal digital garden": {
       "id": "personal-digital-garden",
       "title": "Personal Digital Garden",
