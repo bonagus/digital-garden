@@ -23,6 +23,7 @@ const notes = defineCollection({
   schema: z.object({
     ...baseFields,
     type: z.literal('note').default('note'),
+    cover: z.string().optional(),
   }),
 });
 
@@ -103,6 +104,20 @@ const experiments = defineCollection({
     ...baseFields,
     type: z.literal('experiment').default('experiment'),
     status: z.enum(['exploring', 'concluded', 'abandoned']).default('exploring'),
+    cover: z.string().optional(),
+  }),
+});
+
+/**
+ * Timeline — update terkini bergaya "now page", berdiri sendiri tapi bagian dari garden
+ */
+const timeline = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/timeline' }),
+  schema: z.object({
+    ...baseFields,
+    type: z.literal('timeline').default('timeline'),
+    growthStage: z.enum(['seedling', 'budding', 'evergreen']).default('evergreen'),
+    category: z.enum(['now', 'milestone', 'update', 'life']).default('update'),
   }),
 });
 
@@ -125,5 +140,6 @@ export const collections = {
   podcasts,
   projects,
   experiments,
+  timeline,
   pages,
 };

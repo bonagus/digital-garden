@@ -23,6 +23,7 @@ const { items } = Astro.props;
         startDate={item.data.startDate}
         topics={item.data.topics}
         growthStage={item.data.growthStage}
+        cover={'cover' in item.data ? item.data.cover : undefined}
       />
     </div>
   ))}

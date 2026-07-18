@@ -1,7 +1,7 @@
 ---
 /**
- * ProjectLayout — case study layout for project detail pages
- * Shows tech stack badges, status, repo/demo links, and backlinks
+ * ProjectLayout — Medium-style case study layout
+ * Meta header → full-width cover → divider → body → related/backlinks
  */
 import BaseLayout from './BaseLayout.astro';
 import Backlinks from '../components/content/Backlinks.astro';
@@ -18,12 +18,13 @@ interface Props {
   techStack?: string[];
   repoUrl?: string;
   demoUrl?: string;
+  cover?: string;
   contentId?: string;
 }
 
 const {
   title, description, startDate, updated, topics,
-  growthStage, status, techStack, repoUrl, demoUrl, contentId,
+  growthStage, status, techStack, repoUrl, demoUrl, cover, contentId,
 } = Astro.props;
 
 const growthEmoji = { seedling: '🌱', budding: '🌿', evergreen: '🌳' };
@@ -46,6 +47,7 @@ const statusInfo = status ? statusLabel[status] : null;
 
 <BaseLayout title={title} description={description}>
   <article class="project-article">
+    <!-- Header meta -->
     <header class="project-header">
       <div class="project-meta-top">
         <span class="project-type">Project</span>
@@ -127,6 +129,17 @@ const statusInfo = status ? statusLabel[status] : null;
       )}
     </header>
 
+    <!-- Cover image (full-width) -->
+    {cover && (
+      <figure class="cover-figure">
+        <img src={cover} alt={`Cover ${title}`} class="cover-image" />
+      </figure>
+    )}
+
+    <!-- Divider -->
+    <hr class="content-divider" />
+
+    <!-- Body -->
     <div class="prose">
       <slot />
     </div>
@@ -146,17 +159,15 @@ const statusInfo = status ? statusLabel[status] : null;
   }
 
   .project-header {
-    margin-top: 2.5rem;
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
+    margin-top: 3rem;
+    margin-bottom: 0;
   }
 
   .project-meta-top {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
     flex-wrap: wrap;
   }
 
@@ -203,22 +214,25 @@ const statusInfo = status ? statusLabel[status] : null;
 
   .growth-emoji { font-size: 0.875rem; }
 
+  /* Medium-style large title */
   .project-title {
     font-family: var(--font-serif);
-    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-size: clamp(2rem, 5vw, 2.75rem);
     font-weight: 700;
     color: var(--text-heading);
-    line-height: 1.2;
-    margin: 0 0 0.75rem 0;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0 0 1rem 0;
   }
 
+  /* Medium-style subtitle */
   .project-description {
     font-family: var(--font-sans);
-    font-size: 1.0625rem;
+    font-size: clamp(1.125rem, 2.5vw, 1.375rem);
     font-weight: 400;
-    color: var(--text-body);
-    line-height: 1.5;
-    margin: 0 0 1rem 0;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin: 0 0 1.5rem 0;
   }
 
   /* Tech Stack */
@@ -315,5 +329,28 @@ const statusInfo = status ? statusLabel[status] : null;
   .topic-pill:hover {
     border-color: var(--accent);
     color: var(--accent);
+  }
+
+  /* Cover — full width of content column, flexible height */
+  .cover-figure {
+    margin: 2.5rem 0;
+  }
+
+  .cover-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--radius-base);
+  }
+
+  /* Divider before body */
+  .content-divider {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 2.5rem 0;
+  }
+
+  .cover-figure + .content-divider {
+    margin-top: 0;
   }
 </style>

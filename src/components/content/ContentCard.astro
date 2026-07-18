@@ -10,9 +10,10 @@ interface Props {
   startDate?: string | Date;
   topics?: string[];
   growthStage?: 'seedling' | 'budding' | 'evergreen';
+  cover?: string;
 }
 
-const { title, description, href, type = 'note', startDate, topics, growthStage } = Astro.props;
+const { title, description, href, type = 'note', startDate, topics, growthStage, cover } = Astro.props;
 
 const growthEmoji = {
   seedling: '🌱',
@@ -47,6 +48,14 @@ function formatDate(date?: string | Date): string {
 
 <div class="content-card">
   <a href={href} class="card-link-overlay" aria-label={title}></a>
+  
+  {/* Cover image di atas title */}
+  {cover && (
+    <div class="card-cover">
+      <img src={cover} alt={title} class="cover-image" />
+    </div>
+  )}
+  
   {growthStage && <span class="growth-icon">{growthEmoji[growthStage]}</span>}
   <div class="card-body">
     <h3 class="card-title">{title}</h3>
@@ -91,8 +100,8 @@ function formatDate(date?: string | Date): string {
   .content-card {
     position: relative;
     display: flex;
-    flex-direction: row;
-    padding: 0.875rem;
+    flex-direction: column;
+    padding: 0;
     border-radius: var(--radius-base);
     border: 1px solid var(--border-color);
     background: var(--bg-secondary);
@@ -101,6 +110,7 @@ function formatDate(date?: string | Date): string {
     will-change: transform, box-shadow;
     cursor: pointer;
     height: 100%;
+    overflow: hidden;
   }
 
   .card-link-overlay {
@@ -120,17 +130,41 @@ function formatDate(date?: string | Date): string {
     color: var(--accent);
   }
 
+  /* Cover image - full card width, flexible height */
+  .card-cover {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--bg-primary);
+  }
+
+  .cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
   .growth-icon {
-    flex-shrink: 0;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
     font-size: 1.25rem;
-    margin-right: 0.5rem;
-    position: relative;
-    top: 2px;
+    z-index: 2;
+    background: var(--bg-secondary);
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
   }
 
   .card-body {
     flex: 1;
     min-width: 0;
+    padding: 0.875rem;
   }
 
   .card-title {

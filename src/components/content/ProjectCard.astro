@@ -15,12 +15,13 @@ interface Props {
   repoUrl?: string;
   demoUrl?: string;
   featured?: boolean;
+  cover?: string;
 }
 
 const {
   title, description, href, startDate, topics,
   growthStage, status = 'active', techStack = [],
-  repoUrl, demoUrl, featured = false,
+  repoUrl, demoUrl, featured = false, cover,
 } = Astro.props;
 
 const statusInfo: Record<string, { text: string; color: string }> = {
@@ -49,6 +50,13 @@ function formatDate(date?: string | Date): string {
 <div class:list={['project-card', { featured }]}>
   <a href={href} class="card-link-overlay" aria-label={title}></a>
 
+  {cover && (
+    <div class="card-cover">
+      <img src={cover} alt={title} class="cover-image" />
+    </div>
+  )}
+
+  <div class="card-inner">
   <div class="card-top">
     <div class="card-top-left">
       {featured && <span class="featured-badge">★ Featured</span>}
@@ -102,6 +110,7 @@ function formatDate(date?: string | Date): string {
       ))}
     </div>
   )}
+  </div>
 </div>
 
 <style>
@@ -109,7 +118,7 @@ function formatDate(date?: string | Date): string {
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: 1.25rem;
+    padding: 0;
     border-radius: var(--radius-base);
     border: 1px solid var(--border-color);
     background: var(--bg-secondary);
@@ -117,6 +126,28 @@ function formatDate(date?: string | Date): string {
     transition: all 0.3s ease-in-out;
     cursor: pointer;
     height: 100%;
+    overflow: hidden;
+  }
+
+  .card-cover {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--bg-primary);
+  }
+
+  .cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .card-inner {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.25rem;
   }
 
   .project-card.featured {

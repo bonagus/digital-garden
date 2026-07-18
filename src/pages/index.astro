@@ -1,11 +1,14 @@
 ---
+export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContentCard from '../components/content/ContentCard.astro';
 import ProjectCard from '../components/content/ProjectCard.astro';
 import BookCard from '../components/content/BookCard.astro';
 import PodcastCard from '../components/content/PodcastCard.astro';
 import { getPublishedNotes, getPublishedEssays, getPublishedBooks, getPublishedPodcasts, getPublishedProjects, getPublishedExperiments } from '../lib/content';
+import { getHomeSettings } from '../lib/settings';
 
+const home = await getHomeSettings();
 const notes = await getPublishedNotes();
 const essays = await getPublishedEssays();
 const books = await getPublishedBooks();
@@ -27,10 +30,10 @@ const recentExperiments = experiments.slice(0, 3);
     <!-- Hero Header -->
     <header class="page-header">
       <h1 class="main-title">
-        <strong>Bonagus</strong> — tempat ide tumbuh, catatan berkembang, dan pengetahuan terhubung.
+        <strong>{home.titleActive}</strong> {home.titleRest}
       </h1>
       <p class="subtitle">
-        Developer & lifelong learner. Ini adalah digital garden saya — kumpulan catatan, esai, dan eksperimen yang terus berkembang.
+        {home.description}
       </p>
     </header>
 
@@ -73,6 +76,7 @@ const recentExperiments = experiments.slice(0, 3);
               startDate={essay.data.startDate}
               topics={essay.data.topics}
               growthStage={essay.data.growthStage}
+              cover={essay.data.cover}
             />
           ))}
         </div>
@@ -183,6 +187,7 @@ const recentExperiments = experiments.slice(0, 3);
               techStack={project.data.techStack}
               repoUrl={project.data.repoUrl}
               demoUrl={project.data.demoUrl}
+              cover={project.data.cover}
               featured={project.data.featured}
             />
           ))}
@@ -210,6 +215,7 @@ const recentExperiments = experiments.slice(0, 3);
               startDate={exp.data.startDate}
               topics={exp.data.topics}
               growthStage={exp.data.growthStage}
+              cover={exp.data.cover}
             />
           ))}
         </div>

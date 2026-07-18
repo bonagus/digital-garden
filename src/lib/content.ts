@@ -8,7 +8,8 @@ export type BookEntry = CollectionEntry<'books'>;
 export type PodcastEntry = CollectionEntry<'podcasts'>;
 export type ProjectEntry = CollectionEntry<'projects'>;
 export type ExperimentEntry = CollectionEntry<'experiments'>;
-export type AnyContentEntry = NoteEntry | EssayEntry | BookEntry | PodcastEntry | ProjectEntry | ExperimentEntry;
+export type TimelineEntry = CollectionEntry<'timeline'>;
+export type AnyContentEntry = NoteEntry | EssayEntry | BookEntry | PodcastEntry | ProjectEntry | ExperimentEntry | TimelineEntry;
 
 /**
  * Filter out draft entries in production
@@ -80,18 +81,27 @@ export async function getPublishedExperiments(): Promise<ExperimentEntry[]> {
 }
 
 /**
+ * Get published timeline entries
+ */
+export async function getPublishedTimeline(): Promise<TimelineEntry[]> {
+  const entries = await getCollection('timeline');
+  return sortByDate(filterDrafts(entries));
+}
+
+/**
  * Get all published content (all types combined)
  */
 export async function getAllPublishedContent(): Promise<AnyContentEntry[]> {
-  const [notes, essays, books, podcasts, projects, experiments] = await Promise.all([
+  const [notes, essays, books, podcasts, projects, experiments, timeline] = await Promise.all([
     getPublishedNotes(),
     getPublishedEssays(),
     getPublishedBooks(),
     getPublishedPodcasts(),
     getPublishedProjects(),
     getPublishedExperiments(),
+    getPublishedTimeline(),
   ]);
-  return sortByDate([...notes, ...essays, ...books, ...podcasts, ...projects, ...experiments]);
+  return sortByDate([...notes, ...essays, ...books, ...podcasts, ...projects, ...experiments, ...timeline]);
 }
 
 /**

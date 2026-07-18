@@ -170,42 +170,16 @@
     }
   },
   "outboundLinks": {
-    "belajar-astro": [
-      "membangun-digital-garden",
-      "personal-digital-garden",
-      "tailwind-v4"
-    ],
-    "membangun-digital-garden": [
-      "belajar-astro",
-      "personal-digital-garden"
-    ],
-    "personal-digital-garden": [
-      "membangun-digital-garden",
-      "belajar-astro",
-      "tailwind-v4"
-    ],
     "tailwind-v4": [
       "personal-digital-garden",
       "belajar-astro"
     ]
   },
   "inboundLinks": {
-    "membangun-digital-garden": [
-      "belajar-astro",
-      "personal-digital-garden"
-    ],
     "personal-digital-garden": [
-      "belajar-astro",
-      "membangun-digital-garden",
       "tailwind-v4"
     ],
-    "tailwind-v4": [
-      "belajar-astro",
-      "personal-digital-garden"
-    ],
     "belajar-astro": [
-      "membangun-digital-garden",
-      "personal-digital-garden",
       "tailwind-v4"
     ]
   }

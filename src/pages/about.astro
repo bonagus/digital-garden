@@ -1,24 +1,192 @@
 ---
-import PageLayout from '../layouts/PageLayout.astro';
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAboutSettings, getSocialLinks } from '../lib/settings';
+
+const about = await getAboutSettings();
+const socialLinks = await getSocialLinks();
 ---
 
-<PageLayout title="About" description="Tentang saya dan digital garden ini.">
-  <p>
-    Halo! Saya <strong>Bonagus</strong>. Ini adalah personal digital garden saya — sebuah tempat di mana ide-ide
-    tumbuh, catatan berkembang, dan pengetahuan saling terhubung secara organik.
-  </p>
+<BaseLayout title="About" description={about.description}>
+  <div class="about-wrapper">
+    <header class="about-header">
+      <h1 class="about-title">
+        <strong>{about.titleActive}</strong> {about.titleRest}
+      </h1>
+      <p class="about-bio">{about.description}</p>
 
-  <h2>Tentang Garden Ini</h2>
-  <p>
-    Berbeda dengan blog tradisional yang tersusun kronologis, digital garden ini lebih menyerupai
-    taman — ada tanaman yang baru ditanam (seedling), yang sedang berkembang (budding),
-    dan yang sudah matang (evergreen). Tidak semua catatan di sini sempurna, dan itulah intinya.
-  </p>
+      {socialLinks.length > 0 && (
+        <div class="about-socials">
+          {socialLinks.map((link) => (
+            <a href={link.href} class="about-social-link" target={link.key === 'email' ? undefined : '_blank'} rel="noopener noreferrer">
+              {link.label}
+            </a>
+          ))}
+        </div>
+      )}
+    </header>
 
-  <h2>Teknologi</h2>
-  <p>
-    Website ini dibangun dengan <strong>Astro</strong>, <strong>TypeScript</strong>,
-    <strong>Tailwind CSS</strong>, dan <strong>MDX</strong>. Konten ditulis dalam format MDX
-    dan di-generate menjadi static files yang bisa di-host di mana saja.
-  </p>
-</PageLayout>
+    {about.experiences.length > 0 && (
+      <section class="experience-section">
+        <h2 class="section-title">Pengalaman</h2>
+        <ol class="experience-list">
+          {about.experiences.map((exp) => (
+            <li class="experience-item">
+              <div class="experience-period">{exp.period}</div>
+              <div class="experience-body">
+                <h3 class="experience-role">
+                  {exp.role}
+                  {exp.company && (
+                    <span class="experience-company">
+                      {' · '}
+                      {exp.url ? (
+                        <a href={exp.url} target="_blank" rel="noopener noreferrer">{exp.company}</a>
+                      ) : (
+                        exp.company
+                      )}
+                    </span>
+                  )}
+                </h3>
+                {exp.summary && <p class="experience-summary">{exp.summary}</p>}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .about-wrapper {
+    max-width: var(--width-content);
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .about-header {
+    margin-top: 2.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .about-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text-heading);
+    margin-bottom: 1rem;
+  }
+
+  .about-title strong {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .about-bio {
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    color: var(--text-body);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+
+  .about-socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .about-social-link {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-body);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 3rem;
+    padding: 0.375rem 1rem;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .about-social-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .section-title {
+    font-family: var(--font-serif);
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin-bottom: 1.5rem;
+  }
+
+  .experience-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-left: 2px solid var(--border-color);
+  }
+
+  .experience-item {
+    position: relative;
+    padding: 0 0 2rem 1.75rem;
+  }
+
+  .experience-item::before {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg-primary);
+  }
+
+  .experience-item:last-child {
+    padding-bottom: 0;
+  }
+
+  .experience-period {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .experience-role {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-heading);
+    margin: 0 0 0.375rem 0;
+    line-height: 1.4;
+  }
+
+  .experience-company {
+    font-weight: 400;
+    color: var(--text-body);
+  }
+
+  .experience-company a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .experience-company a:hover {
+    text-decoration: underline;
+  }
+
+  .experience-summary {
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    color: var(--text-body);
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>

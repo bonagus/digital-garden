@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/content/ProjectCard.astro';
 import { getPublishedProjects } from '../lib/content';
@@ -34,6 +35,7 @@ const other = allProjects.filter((p) => !p.data.featured);
               techStack={project.data.techStack}
               repoUrl={project.data.repoUrl}
               demoUrl={project.data.demoUrl}
+              cover={project.data.cover}
               featured={true}
             />
           ))}
@@ -58,6 +60,7 @@ const other = allProjects.filter((p) => !p.data.featured);
               techStack={project.data.techStack}
               repoUrl={project.data.repoUrl}
               demoUrl={project.data.demoUrl}
+              cover={project.data.cover}
             />
           ))}
         </div>

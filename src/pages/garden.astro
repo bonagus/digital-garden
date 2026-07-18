@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SearchBar from '../components/garden/SearchBar.astro';
 import TopicCloud from '../components/garden/TopicCloud.astro';
@@ -13,6 +14,7 @@ const totalBooks = allContent.filter((c) => c.collection === 'books').length;
 const totalPodcasts = allContent.filter((c) => c.collection === 'podcasts').length;
 const totalProjects = allContent.filter((c) => c.collection === 'projects').length;
 const totalExperiments = allContent.filter((c) => c.collection === 'experiments').length;
+const totalTimeline = allContent.filter((c) => c.collection === 'timeline').length;
 ---
 
 <BaseLayout title="Garden" description="Semua konten dalam satu taman pengetahuan.">
@@ -36,6 +38,8 @@ const totalExperiments = allContent.filter((c) => c.collection === 'experiments'
         <span class="stat">{totalProjects} projects</span>
         <span class="stat-dot">·</span>
         <span class="stat">{totalExperiments} experiments</span>
+        <span class="stat-dot">·</span>
+        <span class="stat">{totalTimeline} timeline</span>
       </div>
     </header>
 

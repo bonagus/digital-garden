@@ -1,12 +1,15 @@
 ---
+export const prerender = true;
 import { getCollection, render } from 'astro:content';
-import ContentLayout from '../layouts/ContentLayout.astro';
-import ProjectLayout from '../layouts/ProjectLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import BookLayout from '../layouts/BookLayout.astro';
 import PodcastLayout from '../layouts/PodcastLayout.astro';
+import ContentLayout from '../layouts/ContentLayout.astro';
+import ProjectLayout from '../layouts/ProjectLayout.astro';
 
 export async function getStaticPaths() {
-  const collections = ['notes', 'essays', 'books', 'podcasts', 'projects', 'experiments'] as const;
+  const collections = ['notes', 'essays', 'books', 'podcasts', 'projects', 'experiments', 'timeline'] as const;
   const paths = [];
 
   for (const collectionName of collections) {
@@ -43,6 +46,7 @@ const updatedStr = typeof updated === 'string' ? updated : updated?.toISOString(
     techStack={'techStack' in entry.data ? entry.data.techStack : undefined}
     repoUrl={'repoUrl' in entry.data ? entry.data.repoUrl : undefined}
     demoUrl={'demoUrl' in entry.data ? entry.data.demoUrl : undefined}
+    cover={'cover' in entry.data ? entry.data.cover : undefined}
     contentId={entry.id}
   >
     <Content />
@@ -93,6 +97,7 @@ const updatedStr = typeof updated === 'string' ? updated : updated?.toISOString(
     updated={updatedStr}
     topics={topics}
     growthStage={growthStage}
+    cover={'cover' in entry.data ? entry.data.cover : undefined}
     contentId={entry.id}
   >
     <Content />

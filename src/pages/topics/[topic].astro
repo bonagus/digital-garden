@@ -1,7 +1,9 @@
 ---
+export const prerender = true;
+import { getAllPublishedContent } from '../../lib/content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import TopicCloud from '../../components/garden/TopicCloud.astro';
 import ContentCard from '../../components/content/ContentCard.astro';
+import TopicCloud from '../../components/garden/TopicCloud.astro';
 import { getAllTopics, getContentByTopic } from '../../lib/content';
 
 export async function getStaticPaths() {

@@ -1,4 +1,5 @@
 ---
+export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContentCard from '../components/content/ContentCard.astro';
 import { getPublishedExperiments } from '../lib/content';
@@ -25,6 +26,7 @@ const experiments = await getPublishedExperiments();
           startDate={exp.data.startDate}
           topics={exp.data.topics}
           growthStage={exp.data.growthStage}
+          cover={exp.data.cover}
         />
       ))}
     </div>

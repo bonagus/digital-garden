@@ -1,0 +1,14 @@
+{
+  "titleActive": "Bonagus",
+  "titleRest": "— developer, penulis, dan tukang kebun digital.",
+  "description": "Halo! Saya Bonagus. Ini adalah personal digital garden saya — tempat ide tumbuh, catatan berkembang, dan pengetahuan saling terhubung secara organik.",
+  "experiences": [
+    {
+      "role": "IT Support",
+      "company": "LDC",
+      "url": "ldc.ump.ac.id",
+      "period": "2022 — sekarang",
+      "summary": "IT Support"
+    }
+  ]
+}

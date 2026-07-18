@@ -1,7 +1,7 @@
 ---
 /**
- * PodcastLayout — detail page for podcast/audiobook entries
- * Cover with play overlay, series info, and prose content
+ * PodcastLayout — Medium-style podcast/audiobook layout
+ * Cover below meta + audio player
  */
 import BaseLayout from './BaseLayout.astro';
 import Backlinks from '../components/content/Backlinks.astro';
@@ -40,80 +40,70 @@ function formatFullDate(date?: string): string {
 
 <BaseLayout title={title} description={description}>
   <article class="podcast-article">
+    <!-- Header meta -->
     <header class="podcast-header">
-      <div class="podcast-header-layout">
-        {/* Cover */}
-        <div class="cover-column">
-          {cover ? (
-            <div class="cover-wrapper">
-              <img src={cover} alt={`Cover of ${title}`} class="podcast-cover" />
-              <div class="play-overlay">
-                <svg width="24" height="24" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                </svg>
-              </div>
-            </div>
-          ) : (
-            <div class="cover-placeholder">
-              <span>🎧</span>
-            </div>
-          )}
-        </div>
-
-        {/* Info */}
-        <div class="info-column">
-          <div class="meta-top">
-            <span class="content-type">Podcast / Audiobook</span>
-            {growthStage && (
-              <span class="growth-badge">
-                <span>{growthEmoji[growthStage]}</span>
-                {growthStage}
-              </span>
-            )}
-          </div>
-
-          {series && <p class="podcast-series">{series}</p>}
-          <h1 class="podcast-title">{title}</h1>
-          <p class="podcast-author">by {author}</p>
-
-          {description && <p class="podcast-description">{description}</p>}
-
-          <div class="podcast-meta">
-            {duration && <span class="meta-item">⏱ {duration}</span>}
-            {startDate && <span class="meta-item">Listened {formatFullDate(startDate)}</span>}
-          </div>
-
-          {/* Audio player */}
-          {audioUrl && (
-            <div class="audio-player">
-              <audio controls preload="metadata" class="audio-element">
-                <source src={audioUrl} />
-              </audio>
-            </div>
-          )}
-
-          {/* Links */}
-          {sourceUrl && (
-            <a href={sourceUrl} target="_blank" rel="noopener noreferrer" class="source-link">
-              <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5z" clip-rule="evenodd" />
-                <path fill-rule="evenodd" d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.194a.75.75 0 00-.053 1.06z" clip-rule="evenodd" />
-              </svg>
-              Original Post
-            </a>
-          )}
-
-          {topics && topics.length > 0 && (
-            <div class="podcast-topics">
-              {topics.map((topic) => (
-                <a href={`/topics/${encodeURIComponent(topic.toLowerCase())}`} class="topic-pill">{topic}</a>
-              ))}
-            </div>
-          )}
-        </div>
+      <div class="meta-top">
+        <span class="content-type">Podcast / Audiobook</span>
+        {growthStage && (
+          <span class="growth-badge">
+            <span>{growthEmoji[growthStage]}</span>
+            {growthStage}
+          </span>
+        )}
       </div>
+
+      {series && <p class="podcast-series">{series}</p>}
+      <h1 class="podcast-title">{title}</h1>
+      <p class="podcast-author">by {author}</p>
+
+      {description && <p class="podcast-description">{description}</p>}
+
+      <div class="podcast-meta">
+        {duration && <span class="meta-item">⏱ {duration}</span>}
+        {startDate && <span class="meta-item">Listened {formatFullDate(startDate)}</span>}
+      </div>
+
+      {/* Audio player */}
+      {audioUrl && (
+        <div class="audio-player">
+          <audio controls preload="metadata" class="audio-element">
+            <source src={audioUrl} />
+            Browser Anda tidak mendukung audio player.
+          </audio>
+        </div>
+      )}
+
+      {/* Source link */}
+      {sourceUrl && (
+        <a href={sourceUrl} target="_blank" rel="noopener noreferrer" class="source-link">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5z" clip-rule="evenodd" />
+            <path fill-rule="evenodd" d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.194a.75.75 0 00-.053 1.06z" clip-rule="evenodd" />
+          </svg>
+          Original Source
+        </a>
+      )}
+
+      {topics && topics.length > 0 && (
+        <div class="podcast-topics">
+          {topics.map((topic) => (
+            <a href={`/topics/${encodeURIComponent(topic.toLowerCase())}`} class="topic-pill">{topic}</a>
+          ))}
+        </div>
+      )}
     </header>
 
+    <!-- Cover below meta -->
+    {cover && (
+      <figure class="cover-figure">
+        <img src={cover} alt={`Cover of ${title}`} class="podcast-cover" />
+      </figure>
+    )}
+
+    <!-- Divider -->
+    <hr class="content-divider" />
+
+    <!-- Body -->
     <div class="prose">
       <slot />
     </div>
@@ -131,82 +121,15 @@ function formatFullDate(date?: string): string {
   }
 
   .podcast-header {
-    margin-top: 2.5rem;
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  .podcast-header-layout {
-    display: flex;
-    gap: 1.5rem;
-    align-items: flex-start;
-  }
-
-  @media (max-width: 640px) {
-    .podcast-header-layout {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-  }
-
-  .cover-column {
-    flex-shrink: 0;
-    width: 140px;
-  }
-
-  .cover-wrapper {
-    position: relative;
-    border-radius: var(--radius-base);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-  }
-
-  .podcast-cover {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  .play-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.35);
-    color: white;
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-  }
-
-  .cover-wrapper:hover .play-overlay {
-    opacity: 1;
-  }
-
-  .cover-placeholder {
-    width: 140px;
-    height: 140px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-base);
-    font-size: 2.5rem;
-  }
-
-  .info-column {
-    flex: 1;
-    min-width: 0;
+    margin-top: 3rem;
+    margin-bottom: 0;
   }
 
   .meta-top {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 0.375rem;
+    margin-bottom: 1rem;
     flex-wrap: wrap;
   }
 
@@ -230,38 +153,41 @@ function formatFullDate(date?: string): string {
 
   .podcast-series {
     font-family: var(--font-sans);
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.03em;
     color: var(--text-muted);
-    margin: 0 0 0.25rem 0;
+    margin: 0 0 0.5rem 0;
   }
 
+  /* Medium-style large title */
   .podcast-title {
     font-family: var(--font-serif);
-    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    font-size: clamp(2rem, 5vw, 2.75rem);
     font-weight: 700;
     color: var(--text-heading);
-    line-height: 1.2;
-    margin: 0 0 0.25rem 0;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.5rem 0;
   }
 
   .podcast-author {
     font-family: var(--font-sans);
-    font-size: 0.9375rem;
+    font-size: clamp(1rem, 2vw, 1.125rem);
     font-weight: 400;
     color: var(--text-muted);
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 1rem 0;
     font-style: italic;
   }
 
+  /* Medium-style description */
   .podcast-description {
     font-family: var(--font-sans);
-    font-size: 0.875rem;
+    font-size: clamp(1.125rem, 2.5vw, 1.25rem);
     color: var(--text-body);
     line-height: 1.5;
-    margin: 0 0 0.75rem 0;
+    margin: 0 0 1.25rem 0;
   }
 
   .podcast-meta {
@@ -273,7 +199,7 @@ function formatFullDate(date?: string): string {
 
   .meta-item {
     font-family: var(--font-sans);
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     color: var(--text-muted);
   }
 
@@ -283,8 +209,8 @@ function formatFullDate(date?: string): string {
 
   .audio-element {
     width: 100%;
-    max-width: 400px;
-    height: 36px;
+    max-width: 500px;
+    height: 40px;
     border-radius: var(--radius-base);
   }
 
@@ -293,13 +219,13 @@ function formatFullDate(date?: string): string {
     align-items: center;
     gap: 0.375rem;
     font-family: var(--font-sans);
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     font-weight: 500;
     color: var(--text-muted);
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
-    padding: 0.3rem 0.625rem;
+    padding: 0.4rem 0.75rem;
     text-decoration: none;
     margin-bottom: 0.75rem;
     transition: all 0.2s ease-in-out;
@@ -314,16 +240,17 @@ function formatFullDate(date?: string): string {
     display: flex;
     flex-wrap: wrap;
     gap: 0.375rem;
+    margin-top: 0.5rem;
   }
 
   .topic-pill {
     font-family: var(--font-sans);
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 3rem;
-    padding: 0.15rem 0.625rem;
+    padding: 0.2rem 0.75rem;
     text-decoration: none;
     transition: all 0.2s ease-in-out;
   }
@@ -331,5 +258,30 @@ function formatFullDate(date?: string): string {
   .topic-pill:hover {
     border-color: var(--accent);
     color: var(--accent);
+  }
+
+  /* Cover below meta */
+  .cover-figure {
+    margin: 2.5rem auto;
+    max-width: 300px;
+  }
+
+  .podcast-cover {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--radius-base);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Divider */
+  .content-divider {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 2.5rem 0;
+  }
+
+  .cover-figure + .content-divider {
+    margin-top: 0;
   }
 </style>
