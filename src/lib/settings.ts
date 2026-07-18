@@ -1,11 +1,13 @@
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
+import homeData from '../content/settings/home.json';
+import aboutData from '../content/settings/about.json';
+import socialData from '../content/settings/social.json';
 
 /**
- * Reader Keystatic untuk membaca singleton (home, about, social) di build time.
- * Semua getter mengembalikan default aman kalau singleton belum pernah disimpan lewat CMS.
+ * Setting singleton (home, about, social) dibaca langsung dari JSON via import
+ * agar ikut ter-bundle saat build — aman untuk runtime Cloudflare Workers
+ * (createReader Keystatic butuh fs Node yang tidak tersedia di Workers).
+ * Semua getter mengembalikan default aman kalau field belum pernah diisi lewat CMS.
  */
-const reader = createReader(process.cwd(), keystaticConfig);
 
 export interface HomeSettings {
   titleActive: string;
@@ -39,7 +41,7 @@ export interface SocialSettings {
 }
 
 export async function getHomeSettings(): Promise<HomeSettings> {
-  const data = await reader.singletons.home.read();
+  const data = homeData as Partial<HomeSettings> | undefined;
   return {
     titleActive: data?.titleActive || 'Bonagus',
     titleRest:
@@ -51,7 +53,7 @@ export async function getHomeSettings(): Promise<HomeSettings> {
 }
 
 export async function getAboutSettings(): Promise<AboutSettings> {
-  const data = await reader.singletons.about.read();
+  const data = aboutData as Partial<AboutSettings> | undefined;
   return {
     titleActive: data?.titleActive || 'Bonagus',
     titleRest: data?.titleRest || '— developer, penulis, dan tukang kebun digital.',
@@ -69,7 +71,7 @@ export async function getAboutSettings(): Promise<AboutSettings> {
 }
 
 export async function getSocialSettings(): Promise<SocialSettings> {
-  const data = await reader.singletons.social.read();
+  const data = socialData as Partial<SocialSettings> | undefined;
   return {
     email: data?.email || 'hello@bonagus.my.id',
     github: data?.github || 'https://github.com/bonagus',
