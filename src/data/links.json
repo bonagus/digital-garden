@@ -1,5 +1,84 @@
 {
-  "contentMap": {},
+  "contentMap": {
+    "hei-diriku": {
+      "id": "hei-diriku",
+      "title": "hei-diriku",
+      "collection": "notes",
+      "aliases": []
+    },
+    "moralitas-objektif-emosional-atau-relatif": {
+      "id": "moralitas-objektif-emosional-atau-relatif",
+      "title": "moralitas-objektif-emosional-atau-relatif",
+      "collection": "notes",
+      "aliases": []
+    },
+    "pendidikan-yang-dinamis": {
+      "id": "pendidikan-yang-dinamis",
+      "title": "pendidikan-yang-dinamis",
+      "collection": "notes",
+      "aliases": []
+    },
+    "rasionalisme": {
+      "id": "rasionalisme",
+      "title": "rasionalisme",
+      "collection": "notes",
+      "aliases": []
+    },
+    "tentang-masalah-dan-ide": {
+      "id": "tentang-masalah-dan-ide",
+      "title": "tentang-masalah-dan-ide",
+      "collection": "notes",
+      "aliases": []
+    },
+    "tentang-persahabatan": {
+      "id": "tentang-persahabatan",
+      "title": "tentang-persahabatan",
+      "collection": "notes",
+      "aliases": []
+    },
+    "tuhan-mini": {
+      "id": "tuhan-mini",
+      "title": "tuhan-mini",
+      "collection": "notes",
+      "aliases": []
+    },
+    "7-habits-of-psychologically-sophisticated-people": {
+      "id": "7-habits-of-psychologically-sophisticated-people",
+      "title": "7-habits-of-psychologically-sophisticated-people",
+      "collection": "essays",
+      "aliases": []
+    },
+    "cara-berpikiran-terbuka": {
+      "id": "cara-berpikiran-terbuka",
+      "title": "cara-berpikiran-terbuka",
+      "collection": "essays",
+      "aliases": []
+    },
+    "ego-sekali-lagi": {
+      "id": "ego-sekali-lagi",
+      "title": "ego-sekali-lagi",
+      "collection": "essays",
+      "aliases": []
+    },
+    "tentang-titik-balik": {
+      "id": "tentang-titik-balik",
+      "title": "tentang-titik-balik",
+      "collection": "essays",
+      "aliases": []
+    },
+    "the-meditations-of-marcus-aurelius": {
+      "id": "the-meditations-of-marcus-aurelius",
+      "title": "the-meditations-of-marcus-aurelius",
+      "collection": "essays",
+      "aliases": []
+    },
+    "tiga-racun-ego": {
+      "id": "tiga-racun-ego",
+      "title": "tiga-racun-ego",
+      "collection": "essays",
+      "aliases": []
+    }
+  },
   "outboundLinks": {},
   "inboundLinks": {}
 }

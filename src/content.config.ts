@@ -71,7 +71,7 @@ const podcasts = defineCollection({
     author: z.string(),
     cover: z.string().optional(),
     duration: z.string().optional(),
-    audioUrl: z.string().url().optional(),
+    audioUrl: z.string().optional(),
     sourceUrl: z.string().url().optional(),
     episode: z.string().optional(),
     series: z.string().optional(),
