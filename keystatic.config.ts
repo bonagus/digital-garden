@@ -8,7 +8,7 @@ export default config({
   ui: {
     brand: { name: 'Bonagus CMS' },
     navigation: {
-      Pages: ['home', 'about', 'social'],
+      Pages: ['home', 'about', 'timelinePage', 'social'],
       Garden: ['notes', 'essays', 'books', 'podcasts', 'projects', 'experiments', 'timeline'],
     },
   },
@@ -76,6 +76,23 @@ export default config({
               `${props.fields.role.value || 'Posisi'} @ ${props.fields.company.value || 'Perusahaan'}`,
           }
         ),
+      },
+    }),
+    timelinePage: singleton({
+      label: 'Timeline (Judul & Deskripsi)',
+      path: 'src/content/settings/timeline-page',
+      format: { data: 'json' },
+      schema: {
+        title: fields.text({
+          label: 'Judul Halaman',
+          defaultValue: 'Timeline',
+        }),
+        description: fields.text({
+          label: 'Deskripsi Halaman',
+          multiline: true,
+          defaultValue:
+            'Apa yang sedang saya kerjakan, pelajari, dan pikirkan akhir-akhir ini. Terinspirasi dari konsep /now — sebuah catatan hidup yang diperbarui seiring waktu.',
+        }),
       },
     }),
     social: singleton({
@@ -261,10 +278,11 @@ export default config({
         author: fields.text({ label: 'Author / Creator' }),
         cover: fields.image({ label: 'Cover Image', directory: 'public/images/podcasts', publicPath: '/images/podcasts/' }),
         duration: fields.text({ label: 'Duration (e.g. 45 min)' }),
-        audioUrl: fields.url({ label: 'Audio URL (optional)' }),
+        audioUrl: fields.text({ label: 'Audio URL / Path (mis. /audio/... atau https://...)' }),
         sourceUrl: fields.url({ label: 'Source / Original Post URL' }),
         episode: fields.text({ label: 'Episode' }),
         series: fields.text({ label: 'Series' }),
+        featured: fields.checkbox({ label: 'Featured', defaultValue: false }),
         draft: fields.checkbox({ label: 'Draft', defaultValue: false }),
         aliases: fields.array(fields.text({ label: 'Alias' }), {
           label: 'Aliases',

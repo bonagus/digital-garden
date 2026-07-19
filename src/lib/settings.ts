@@ -1,6 +1,7 @@
 import homeData from '../content/settings/home.json';
 import aboutData from '../content/settings/about.json';
 import socialData from '../content/settings/social.json';
+import timelinePageData from '../content/settings/timeline-page.json';
 
 /**
  * Setting singleton (home, about, social) dibaca langsung dari JSON via import
@@ -29,6 +30,11 @@ export interface AboutSettings {
   description: string;
   photo: string | null;
   experiences: Experience[];
+}
+
+export interface TimelinePageSettings {
+  title: string;
+  description: string;
 }
 
 export interface SocialSettings {
@@ -82,6 +88,16 @@ export async function getSocialSettings(): Promise<SocialSettings> {
     instagram: data?.instagram || null,
     youtube: data?.youtube || null,
     website: data?.website || null,
+  };
+}
+
+export async function getTimelinePageSettings(): Promise<TimelinePageSettings> {
+  const data = timelinePageData as Partial<TimelinePageSettings> | undefined;
+  return {
+    title: data?.title || 'Timeline',
+    description:
+      data?.description ||
+      'Apa yang sedang saya kerjakan, pelajari, dan pikirkan akhir-akhir ini. Terinspirasi dari konsep /now — sebuah catatan hidup yang diperbarui seiring waktu.',
   };
 }
 

@@ -2,25 +2,16 @@
 export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getAboutSettings, getSocialLinks } from '../lib/settings';
-import { getPublishedTimeline, formatDate } from '../lib/content';
 
 const about = await getAboutSettings();
 const socialLinks = await getSocialLinks();
-const timelineEntries = await getPublishedTimeline();
-
-const categoryMeta: Record<string, { icon: string; label: string }> = {
-  now: { icon: '📍', label: 'Now' },
-  milestone: { icon: '🎯', label: 'Milestone' },
-  update: { icon: '📝', label: 'Update' },
-  life: { icon: '🌤', label: 'Life' },
-};
 ---
 
 <BaseLayout title="About" description={about.description}>
   <div class="about-wrapper">
+    <div class:list={['about-grid', { 'has-photo': Boolean(about.photo) }]}>
 
-    {/* ── Atas: foto (kiri) + header (kanan) ── */}
-    <div class:list={['about-top', { 'has-photo': Boolean(about.photo) }]}>
+      {/* ── Kiri: hanya foto ── */}
       {about.photo && (
         <div class="about-photo-col">
           <div class="about-photo-wrap">
@@ -29,11 +20,44 @@ const categoryMeta: Record<string, { icon: string; label: string }> = {
         </div>
       )}
 
-      <header class="about-header-col">
+      {/* ── Kanan: judul, bio, divider, pengalaman, kontak ── */}
+      <div class="about-content-col">
         <h1 class="about-title">
           <strong>{about.titleActive}</strong> {about.titleRest}
         </h1>
         <p class="about-bio">{about.description}</p>
+
+        {about.experiences.length > 0 && (
+          <>
+            <hr class="about-divider" />
+            <section class="experience-section">
+              <h2 class="section-title">Pengalaman</h2>
+              <ol class="experience-list">
+                {about.experiences.map((exp) => (
+                  <li class="experience-item">
+                    <div class="experience-period">{exp.period}</div>
+                    <div class="experience-body">
+                      <h3 class="experience-role">
+                        {exp.role}
+                        {exp.company && (
+                          <span class="experience-company">
+                            {' · '}
+                            {exp.url ? (
+                              <a href={exp.url} target="_blank" rel="noopener noreferrer">{exp.company}</a>
+                            ) : (
+                              exp.company
+                            )}
+                          </span>
+                        )}
+                      </h3>
+                      {exp.summary && <p class="experience-summary">{exp.summary}</p>}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          </>
+        )}
 
         {socialLinks.length > 0 && (
           <div class="about-socials">
@@ -49,71 +73,8 @@ const categoryMeta: Record<string, { icon: string; label: string }> = {
             ))}
           </div>
         )}
-      </header>
-    </div>
-
-    {/* ── Divider ── */}
-    {about.experiences.length > 0 && <hr class="about-divider" />}
-
-    {/* ── Bawah: pengalaman (kiri) + timeline (kanan) ── */}
-    {about.experiences.length > 0 && (
-      <div class="about-bottom">
-        <section class="experience-section">
-          <h2 class="section-title">Pengalaman</h2>
-          <ol class="experience-list">
-            {about.experiences.map((exp) => (
-              <li class="experience-item">
-                <div class="experience-period">{exp.period}</div>
-                <div class="experience-body">
-                  <h3 class="experience-role">
-                    {exp.role}
-                    {exp.company && (
-                      <span class="experience-company">
-                        {' · '}
-                        {exp.url ? (
-                          <a href={exp.url} target="_blank" rel="noopener noreferrer">{exp.company}</a>
-                        ) : (
-                          exp.company
-                        )}
-                      </span>
-                    )}
-                  </h3>
-                  {exp.summary && <p class="experience-summary">{exp.summary}</p>}
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        {timelineEntries.length > 0 && (
-          <aside class="timeline-aside">
-            <h2 class="section-title">Timeline</h2>
-            <ol class="timeline-list">
-              {timelineEntries.slice(0, 8).map((entry) => {
-                const meta = categoryMeta[entry.data.category] ?? categoryMeta.update;
-                return (
-                  <li class="timeline-item">
-                    <span class="timeline-dot" title={meta.label}>{meta.icon}</span>
-                    <div class="timeline-body">
-                      <time class="timeline-date">{formatDate(entry.data.startDate)}</time>
-                      <h3 class="timeline-title-item">
-                        <a href={`/${entry.id}`}>{entry.data.title}</a>
-                      </h3>
-                      {entry.data.description && (
-                        <p class="timeline-desc">{entry.data.description}</p>
-                      )}
-                    </div>
-                  </li>
-                );
-              })}
-            </ol>
-            {timelineEntries.length > 8 && (
-              <a href="/timeline" class="timeline-more">Lihat semua →</a>
-            )}
-          </aside>
-        )}
       </div>
-    )}
+    </div>
   </div>
 </BaseLayout>
 
@@ -124,13 +85,11 @@ const categoryMeta: Record<string, { icon: string; label: string }> = {
     padding: 0 2rem 4rem;
   }
 
-  /* ── Atas: foto + header ── */
-  .about-top {
+  .about-grid {
     margin-top: 2.5rem;
-    margin-bottom: 2.5rem;
   }
 
-  .about-top.has-photo {
+  .about-grid.has-photo {
     display: grid;
     grid-template-columns: minmax(13rem, 0.75fr) minmax(0, 1.25fr);
     gap: clamp(2rem, 5vw, 5rem);
@@ -143,6 +102,8 @@ const categoryMeta: Record<string, { icon: string; label: string }> = {
     overflow: hidden;
     border-radius: var(--radius-base);
     background: var(--bg-secondary);
+    position: sticky;
+    top: 6rem;
   }
 
   .about-photo {
@@ -171,46 +132,19 @@ const categoryMeta: Record<string, { icon: string; label: string }> = {
     font-size: 1.0625rem;
     color: var(--text-body);
     line-height: 1.7;
-    margin-bottom: 1.25rem;
-  }
-
-  .about-socials {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .about-social-link {
-    font-family: var(--font-sans);
-    font-size: 0.8125rem;
-    font-weight: 500;
-    color: var(--text-body);
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 3rem;
-    padding: 0.375rem 1rem;
-    text-decoration: none;
-    transition: all 0.2s ease-in-out;
-  }
-
-  .about-social-link:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    margin-bottom: 0;
   }
 
   /* ── Divider ── */
   .about-divider {
     border: none;
     border-top: 1px solid var(--border-color);
-    margin: 0 0 2.5rem 0;
+    margin: 2rem 0;
   }
 
-  /* ── Bawah: experience (kiri) + timeline (kanan) ── */
-  .about-bottom {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(2rem, 5vw, 4rem);
-    align-items: start;
+  /* ── Pengalaman ── */
+  .experience-section {
+    margin-bottom: 2rem;
   }
 
   .section-title {
@@ -221,7 +155,6 @@ const categoryMeta: Record<string, { icon: string; label: string }> = {
     margin-bottom: 1.5rem;
   }
 
-  /* Experience */
   .experience-list {
     list-style: none;
     padding: 0;
@@ -289,85 +222,29 @@ const categoryMeta: Record<string, { icon: string; label: string }> = {
     margin: 0;
   }
 
-  /* Timeline aside */
-  .timeline-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border-left: 2px solid var(--border-color);
-  }
-
-  .timeline-item {
-    position: relative;
-    padding: 0 0 1.5rem 1.75rem;
-  }
-
-  .timeline-item:last-child {
-    padding-bottom: 0;
-  }
-
-  .timeline-dot {
-    position: absolute;
-    left: -0.825rem;
-    top: 0;
-    width: 1.5rem;
-    height: 1.5rem;
+  /* ── Kontak (button) ── */
+  .about-socials {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    background: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 50%;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
-  .timeline-date {
+  .about-social-link {
     font-family: var(--font-sans);
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     font-weight: 500;
-    color: var(--text-muted);
-    display: block;
-    margin-bottom: 0.125rem;
-  }
-
-  .timeline-title-item {
-    font-family: var(--font-serif);
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1.4;
-    margin: 0 0 0.25rem 0;
-  }
-
-  .timeline-title-item a {
-    color: var(--text-heading);
-    text-decoration: none;
-    transition: color 0.2s ease-in-out;
-  }
-
-  .timeline-title-item a:hover {
-    color: var(--accent);
-  }
-
-  .timeline-desc {
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
     color: var(--text-body);
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  .timeline-more {
-    display: inline-block;
-    margin-top: 1rem;
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--accent);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 3rem;
+    padding: 0.375rem 1rem;
     text-decoration: none;
+    transition: all 0.2s ease-in-out;
   }
 
-  .timeline-more:hover {
-    text-decoration: underline;
+  .about-social-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
   }
 
   /* Responsive */
@@ -376,18 +253,14 @@ const categoryMeta: Record<string, { icon: string; label: string }> = {
       padding-inline: 1.25rem;
     }
 
-    .about-top.has-photo {
+    .about-grid.has-photo {
       grid-template-columns: 1fr;
       gap: 1.5rem;
     }
 
     .about-photo-wrap {
       max-width: 22rem;
-    }
-
-    .about-bottom {
-      grid-template-columns: 1fr;
-      gap: 2.5rem;
+      position: static;
     }
   }
 </style>

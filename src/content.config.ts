@@ -75,6 +75,7 @@ const podcasts = defineCollection({
     sourceUrl: z.string().url().optional(),
     episode: z.string().optional(),
     series: z.string().optional(),
+    featured: z.boolean().default(false),
   }),
 });
 

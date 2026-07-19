@@ -2,8 +2,10 @@
 export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getPublishedTimeline, formatDate } from '../lib/content';
+import { getTimelinePageSettings } from '../lib/settings';
 
 const entries = await getPublishedTimeline();
+const page = await getTimelinePageSettings();
 
 const categoryMeta: Record<string, { icon: string; label: string }> = {
   now: { icon: '📍', label: 'Now' },
@@ -22,15 +24,11 @@ for (const entry of entries) {
 const years = Array.from(groups.keys()).sort((a, b) => b - a);
 ---
 
-<BaseLayout title="Timeline" description="Apa yang sedang saya kerjakan dan pelajari — update terbaru bergaya now page.">
+<BaseLayout title={page.title} description={page.description}>
   <div class="timeline-wrapper">
     <header class="timeline-header">
-      <h1 class="timeline-title">Timeline</h1>
-      <p class="timeline-description">
-        Apa yang sedang saya kerjakan, pelajari, dan pikirkan akhir-akhir ini. Terinspirasi dari
-        <a href="https://nownownow.com/about" target="_blank" rel="noopener noreferrer" class="inline-link">konsep /now</a>
-        — sebuah catatan hidup yang diperbarui seiring waktu.
-      </p>
+      <h1 class="timeline-title">{page.title}</h1>
+      <p class="timeline-description">{page.description}</p>
     </header>
 
     {entries.length === 0 ? (
