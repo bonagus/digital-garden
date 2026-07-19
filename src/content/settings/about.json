@@ -1,14 +1,30 @@
 {
-  "titleActive": "Bonagus",
-  "titleRest": "— developer, penulis, dan tukang kebun digital.",
-  "description": "Halo! Saya Bonagus. Ini adalah personal digital garden saya — tempat ide tumbuh, catatan berkembang, dan pengetahuan saling terhubung secara organik.",
+  "titleActive": "The Bonagus",
+  "titleRest": "— pemerhati yang berusaha lebih peduli (lagi) sebagai praktik sosial & penyebaran harmoni.",
+  "description": "Halo! Selamat datang dan semoga harimu menyenangkan. Ini adalah digital garden saya — tempat ide, catatan, dan preferensi personal saya. Mulailah dari manapun kamu menyukainya, kamu juga selalu dapat kembali dan menelusuri kembali karena tempat ini tidak akan kemana-mana atau setidaknya akan bertahan cukup lama (mungkin) :)\n\n",
+  "photo": "/images/about/photo.jpg",
   "experiences": [
     {
       "role": "IT Support",
-      "company": "LDC",
+      "company": "LDC UMP",
       "url": "https://ldc.ump.ac.id/",
       "period": "2022 — sekarang",
       "summary": "IT Support"
+    },
+    {
+      "role": "Programmer",
+      "company": "SL Corp Indonesia",
+      "period": "2021 — 2022"
+    },
+    {
+      "role": "Junior Programmer",
+      "company": "Katalis ICT",
+      "period": "2019 — 2021"
+    },
+    {
+      "role": "Freelance Developer",
+      "company": "Self Employed",
+      "period": "2019 — sekarang"
     }
   ]
 }
