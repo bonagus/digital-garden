@@ -162,6 +162,7 @@
         // Dynamic path to avoid Vite resolving at build time
         const pagefindPath = '/pagefind/pagefind.js';
         pagefind = await import(/* @vite-ignore */ pagefindPath);
+        await pagefind.options({ basePath: '/pagefind/' });
         await pagefind.init();
       } catch {
         // Pagefind not available (dev mode) — fallback silently

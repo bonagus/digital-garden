@@ -57,6 +57,11 @@ export default config({
           defaultValue:
             'Halo! Saya Bonagus. Ini adalah personal digital garden saya — tempat ide tumbuh, catatan berkembang, dan pengetahuan saling terhubung secara organik.',
         }),
+        photo: fields.image({
+          label: 'Foto Profil',
+          directory: 'public/images/about',
+          publicPath: '/images/about/',
+        }),
         experiences: fields.array(
           fields.object({
             role: fields.text({ label: 'Posisi / Peran' }),

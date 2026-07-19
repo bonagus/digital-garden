@@ -1,6 +1,6 @@
 ---
 /**
- * Navbar — Home, Garden (dropdown), About, Contact + Dark Mode Toggle
+ * Navbar — Garden (dropdown), Timeline, About + Dark Mode Toggle
  */
 
 const currentPath = Astro.url.pathname;
@@ -24,8 +24,6 @@ const gardenItems = [
   <div class="nav-right">
     <!-- Desktop Navigation -->
     <div class="nav-links">
-      <a href="/" class:list={['nav-link', { active: currentPath === '/' }]}>Home</a>
-
       <div class="popover">
         <a href="/garden" class:list={['nav-link', { active: currentPath.startsWith('/garden') || currentPath.startsWith('/notes') || currentPath.startsWith('/essays') || currentPath.startsWith('/projects') || currentPath.startsWith('/experiments') }]}>
           Garden
@@ -95,7 +93,6 @@ const gardenItems = [
 <!-- Mobile Menu -->
 <div id="mobile-menu" class="mobile-menu">
   <nav class="mobile-nav">
-    <a href="/" class="mobile-nav-link">Home</a>
     <a href="/garden" class="mobile-nav-link">Garden</a>
     <a href="/notes" class="mobile-nav-link sub">Notes</a>
     <a href="/essays" class="mobile-nav-link sub">Essays</a>

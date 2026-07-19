@@ -14,7 +14,10 @@ const { items } = Astro.props;
 
 <div class="content-grid" id="content-grid">
   {items.map((item) => (
-    <div class="content-grid-item" data-type={item.collection}>
+    <div
+      class:list={['content-grid-item', { 'is-note': item.collection === 'notes' }]}
+      data-type={item.collection}
+    >
       <ContentCard
         title={item.data.title}
         description={item.data.description}
@@ -31,12 +34,22 @@ const { items } = Astro.props;
 
 <style>
   .content-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 0.75rem;
+    columns: 3 18rem;
+    column-gap: 0.75rem;
   }
 
   .content-grid-item {
-    display: block;
+    break-inside: avoid;
+    margin-bottom: 0.75rem;
+  }
+
+  .content-grid-item.is-note .content-card {
+    min-height: 0;
+  }
+
+  @media (max-width: 640px) {
+    .content-grid {
+      columns: 1;
+    }
   }
 </style>

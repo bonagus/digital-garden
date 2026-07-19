@@ -27,6 +27,7 @@ export interface AboutSettings {
   titleActive: string;
   titleRest: string;
   description: string;
+  photo: string | null;
   experiences: Experience[];
 }
 
@@ -60,6 +61,7 @@ export async function getAboutSettings(): Promise<AboutSettings> {
     description:
       data?.description ||
       'Halo! Saya Bonagus. Ini adalah personal digital garden saya — tempat ide tumbuh, catatan berkembang, dan pengetahuan saling terhubung secara organik.',
+    photo: data?.photo || null,
     experiences: (data?.experiences ?? []).map((e) => ({
       role: e.role,
       company: e.company,
