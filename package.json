@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "prebuild": "tsx scripts/generate-links.ts",
-    "build": "tsx scripts/generate-links.ts && astro build && npx pagefind --site dist/client",
+    "build": "tsx scripts/generate-links.ts && astro build",
     "links": "tsx scripts/generate-links.ts",
     "postinstall": "patch-package",
     "preview": "astro preview",
@@ -31,7 +31,6 @@
     "tailwindcss": "^4.3.2"
   },
   "devDependencies": {
-    "pagefind": "^1.5.2",
     "patch-package": "^8.0.1",
     "tsx": "^4.23.0"
   },

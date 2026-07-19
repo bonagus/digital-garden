@@ -1,7 +1,6 @@
 ---
 export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SearchBar from '../components/garden/SearchBar.astro';
 import TopicCloud from '../components/garden/TopicCloud.astro';
 import GardenFilters from '../components/garden/GardenFilters.astro';
 import ContentGrid from '../components/garden/ContentGrid.astro';
@@ -43,7 +42,6 @@ const totalTimeline = allContent.filter((c) => c.collection === 'timeline').leng
       </div>
     </header>
 
-    <SearchBar />
     <TopicCloud />
     <GardenFilters />
     <ContentGrid items={allContent} />
